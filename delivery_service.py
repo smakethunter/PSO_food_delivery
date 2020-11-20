@@ -9,8 +9,82 @@ class Courier:
         #self.fitness = self.calculate_route()[1]
         #self.route = self.calculate_route()[0]
         self.max_bag_weight = 18
+        self.bag = []
+    def bag_weight(self):
+        return sum([x.weight for x in self.bag])
 
-    def calculate_route(self) -> Tuple[List[float], float]:
+    def calculate_route(self, timetable: TimeTable) -> Tuple[List[Stop], float]:
+        """
+        Choosing path based on orders order :).
+        :param timetable: table containing travel time between points
+        :return: Courier path, cost of the path
+        TODO:
+        Steps:
+        Go to first order source
+            add first order to bag
+            add as much left orders as possible
+        For each order in a list
+            if order in the bag:
+                For each order in the bag:
+                    if it's not current order from a list:
+                        go to it's destination
+                        add destination to the path
+                        update cost
+                        update time in bag for all orders in bag
+                        remove order from the bag
+                    else:
+                        go to it's destination
+                        add destination to the path
+                        update cost
+                        update time in bag for all orders in bag
+                        remove order from the bag
+                        break;
+            else:
+                For each order in the bag:
+                    if bag is not empty:
+                        if time to deliver this order is smaller than to pick up new:
+                            go to it's destination
+                            add destination to the path
+                            update cost
+                            update time in bag for all orders in bag
+                            remove order from the bag
+
+                        else:
+                            if weight of the order in the list and bag weight is permitted:
+                                go to order in bag destination
+                                add destination to the path
+                                update cost
+                                update time in bag for all orders in bag
+                                remove order from the bag
+                            else:
+                                go to order in bag source
+                                update time in bag for all orders in bag
+                                add source to the path
+                                add order to the bag
+                                update cost
+                                add as much left orders as possible
+
+                    else:
+                        go to order in bag source
+                        update time in bag for all orders in bag
+                        add source to the path
+                        add order to the bag
+                        update cost
+                        add as much left orders as possible
+
+
+
+        """
+        path: List[Optional] = []
+        cost: float = 0
+
+
+
+
+
+
+
+
         pass
 
     @property

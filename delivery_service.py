@@ -75,8 +75,12 @@ class Courier:
 
 
         """
-        path: List[Optional] = []
+        path: List[Stop] = []
         cost: float = 0
+        self.bag.append(self.order_list[0])
+        path.append(self.order_list[0].source)
+        for order in self._order_list:
+            pass
 
 
 

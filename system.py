@@ -39,7 +39,7 @@ class Restaurant(Stop):
 
     @property
     def order_list(self):
-        return  self._order_list
+        return self._order_list
 
     @order_list.setter
     def order_list(self, order_list):
@@ -47,6 +47,8 @@ class Restaurant(Stop):
 
     pass
 
+    def add_order(self, order):
+        self._order_list.append(order)
 
 class Client(Stop):
     id_iter = itertools.count()
@@ -86,12 +88,12 @@ class Order:
 
 
 class TimeTable:
-    def __init__(self, point_list):
-        self.table: np.array = TimeTable.create_time_table(point_list)
-        self.point_list = point_list
+    def __init__(self, point_list = None):
+        self.table= TimeTable.create_time_table(point_list) if point_list is not None else []
+        self.point_list = point_list if point_list is not None else []
 
     def get_path_time(self, source, destination):
-        return self.table[source, destination]
+        return self.table[source][destination]
 
     @staticmethod
     def get_time(source, destination):
@@ -111,16 +113,30 @@ class TimeTable:
                 else:
                     time_source_to_dest.append(TimeTable.get_time(source.cords, destination.cords))
             time_table.append(time_source_to_dest)
-        return np.array(time_table)
+        return time_table
 
-    def draw_table(self):
+    def add_element(self, point):
+        if len(self.point_list) > 0:
+            self.point_list.append(point)
+            self.table.append([self.get_time(point.cords, dest.cords) for dest in self.point_list])
+            for i, row in enumerate(self.table):
+                row.append(self.get_time(point.cords, self.point_list[i].cords))
+
+        else:
+            self.point_list.append(point)
+            self.table.append([self.get_time(point.cords, point.cords)])
+        print(self.table)
+        pass
+
+    def draw_table(self, draw_distances=False):
         plt.figure("points")
         for point in self.point_list:
             c = 'red' if isinstance(point, Restaurant) else "blue"
             plt.scatter(point.cords[0], point.cords[1], c=c)
             plt.annotate(str(point), (point.cords[0], point.cords[1]))
-            for point_to in self.point_list:
-                draw_line(point, point_to,self, 'red')
+            if draw_distances:
+                for point_to in self.point_list:
+                    draw_line(point, point_to, self, 'red')
 
         plt.show()
 

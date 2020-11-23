@@ -3,13 +3,6 @@ from typing import List,Optional
 
 
 class Particle:
-    def __init__(self, initial_set):
-        starting_position = self.generate_starting_position(initial_set)
-        self.best_position: List[Optional] = starting_position
-        self.position: List[Optional] = starting_position
-        self.velocity: List[Optional] = self.compute_velocity()
-        self.swarm_best_position = starting_position
-        self.best_fitness = self.fitness()
 
     @abstractmethod
     def generate_starting_position(self, initial_set):
@@ -24,21 +17,20 @@ class Particle:
         pass
 
     @abstractmethod
-    def compute_velocity(self):
+    def compute_velocity(self, swarm_best):
         pass
 
+    @abstractmethod
     def update_position(self) -> None:
-        if self.fitness() < self.best_fitness:
-            self.best_fitness = self.fitness()
-            self.best_position = self.position
         pass
 
 
 class Swarm:
 
     def __init__(self, starting_position):
-        self.best_position: List[Particle] = starting_position
+
         self.swarm: List[Particle] = starting_position
+        self.best_position: Particle = self.get_best_position()
         self.best_fitness: float = self.fitness()
 
     def fitness(self) -> float:
@@ -56,4 +48,13 @@ class Swarm:
             self.best_fitness = self.fitness()
             self.best_position = self.swarm
         pass
+
+    def get_best_position(self) -> Particle:
+        best_particle = self.swarm[0]
+        for particle in self.swarm:
+            if particle.fitness() < best_particle.fitness():
+                best_particle = particle
+        return best_particle
+
+
 

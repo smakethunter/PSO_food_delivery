@@ -256,11 +256,17 @@ class Courier:
 
 
 class DeliveryService(Particle):
-    def __init__(self, nr_couriers, min_nr_orders, max_nr_orders, order_list):
-        super(DeliveryService, self).__init__(order_list)
+    def __init__(self, nr_couriers, min_nr_orders, max_nr_orders, initial_set):
+        super(DeliveryService, self).__init__()
         self.nr_couriers = nr_couriers
         self.min_nr_orders = min_nr_orders
         self.max_nr_orders = max_nr_orders
+        starting_position = self.generate_starting_position(initial_set)
+        self.best_position: List[Optional] = starting_position
+        self.position: List[Optional] = starting_position
+        self.velocity: List[Optional] = self.compute_velocity()
+        self.swarm_best_position = starting_position
+        self.best_fitness = self.fitness()
 
     # TODO: ustalenie startowej dystrybucji zamówień na kurierów
     def generate_starting_position(self, order_list):
@@ -269,7 +275,7 @@ class DeliveryService(Particle):
     def move(self):
         pass
 
-    def compute_velocity(self):
+    def compute_velocity(self, swarm_best: Particle):
         pass
 
     def fitness(self):
@@ -278,4 +284,10 @@ class DeliveryService(Particle):
             courier = Courier(row)
             fitness += courier.fitness
         return fitness
+
+    def update_position(self) -> None:
+        if self.fitness() < self.best_fitness:
+            self.best_fitness = self.fitness()
+            self.best_position = self.position
+        pass
 

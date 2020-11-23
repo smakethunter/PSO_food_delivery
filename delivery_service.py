@@ -5,17 +5,21 @@ from drawing_utils import draw_line
 
 class Courier:
 
-    def __init__(self, order_list, timetable):
-        self.timetable = timetable
+    def __init__(self, order_list):
         self._order_list = order_list
         self.max_bag_weight = 18
         self._bag: List[Order] = []
-        path, fitness = self.calculate_route()
-        self.fitness = fitness
-        self.route = path
 
 
     pass
+
+    def get_path(self, timetable):
+        path, fitness = self.calculate_route(timetable=timetable)
+        return path
+
+    def fitness(self, timetable):
+        path, fitness = self.calculate_route(timetable=timetable)
+        return fitness
 
     @property
     def order_list(self):
@@ -43,7 +47,7 @@ class Courier:
             for order in self.bag:
                 order.time_in_bag += time
 
-    def calculate_route(self) -> Tuple[List[Stop], float]:
+    def calculate_route(self,timetable) -> Tuple[List[Stop], float]:
         """
         Choosing path based on orders order :).
         :param timetable: table containing travel time between points
@@ -134,7 +138,7 @@ class Courier:
             if order_from_list in self.bag:
                 for order_in_bag in self.bag:
                     if order_in_bag.id is not order_from_list.id:
-                        step_length = self.timetable.get_path_time(path[-1].id, order_in_bag.destination.id)
+                        step_length = timetable.get_path_time(path[-1].id, order_in_bag.destination.id)
                         path.append(order_in_bag.destination)
                         self.update_delivery_time(step_length)
                         cost += step_length
@@ -144,7 +148,7 @@ class Courier:
 
                     else:
 
-                        step_length = self.timetable.get_path_time(path[-1].id, order_in_bag.destination.id)
+                        step_length = timetable.get_path_time(path[-1].id, order_in_bag.destination.id)
                         path.append(order_in_bag.destination)
                         self.update_delivery_time(step_length)
                         cost += step_length
@@ -159,8 +163,8 @@ class Courier:
                 if len(self.bag) > 0:
                     print('bag is not none')
                     for order_in_bag in self.bag:
-                        order_in_bag_step_length = self.timetable.get_path_time(path[-1].id, order_in_bag.destination.id)
-                        order_in_list_step_length = self.timetable.get_path_time(path[-1].id, order_from_list.source.id)
+                        order_in_bag_step_length = timetable.get_path_time(path[-1].id, order_in_bag.destination.id)
+                        order_in_list_step_length = timetable.get_path_time(path[-1].id, order_from_list.source.id)
                         if order_in_bag_step_length < order_in_list_step_length:
                             path.append(order_in_bag.destination)
                             cost += order_in_bag_step_length
@@ -192,7 +196,7 @@ class Courier:
                                 print(cost)
 
                     if order_from_list not in self.bag:
-                        order_in_list_step_length = self.timetable.get_path_time(path[-1].id, order_from_list.source.id)
+                        order_in_list_step_length = timetable.get_path_time(path[-1].id, order_from_list.source.id)
                         path.append(order_from_list.source)
                         self.update_delivery_time(order_in_list_step_length)
                         cost += order_in_list_step_length
@@ -208,7 +212,7 @@ class Courier:
                 #2
                 else:
 
-                    order_in_list_step_length = self.timetable.get_path_time(path[-1].id, order_from_list.source.id)
+                    order_in_list_step_length = timetable.get_path_time(path[-1].id, order_from_list.source.id)
                     path.append(order_from_list.source)
                     cost += order_in_list_step_length
                     self.bag.append(order_from_list)
@@ -229,7 +233,7 @@ class Courier:
             print('zerowanie')
             print([str(x) for x in self.bag])
             for order_in_bag in self.bag:
-                order_in_bag_step_length = self.timetable.get_path_time(path[-1].id, order_in_bag.destination.id)
+                order_in_bag_step_length = timetable.get_path_time(path[-1].id, order_in_bag.destination.id)
                 path.append(order_in_bag.destination)
                 cost += order_in_bag_step_length
                 self.update_delivery_time(order_in_bag_step_length)
@@ -237,18 +241,19 @@ class Courier:
                 print([str(x) for x in self.bag])
                 #self.bag.remove(order_in_bag)
                 print([str(x) for x in path])
+            self.bag = []
         return path, cost
 
-    def draw_route(self):
+    def draw_route(self, timetable):
         plt.figure()
-        c = 'red' if isinstance(self.route[0], Restaurant) else "blue"
-        plt.scatter(self.route[0].cords[0], self.route[0].cords[1], c=c)
-        plt.annotate(str(self.route[0]), (self.route[0].cords[0], self.route[0].cords[1]))
-        for idx, point in enumerate(self.route[:-1]):
+        c = 'red' if isinstance(self.get_path(timetable)[0], Restaurant) else "blue"
+        plt.scatter(self.get_path(timetable)[0].cords[0], self.get_path(timetable)[0].cords[1], c=c)
+        plt.annotate(str(self.get_path(timetable)[0]), (self.get_path(timetable)[0].cords[0], self.get_path(timetable)[0].cords[1]))
+        for idx, point in enumerate(self.get_path(timetable)[:-1]):
             c = 'red' if isinstance(point, Restaurant) else "blue"
-            plt.scatter(self.route[idx+1].cords[0], self.route[idx+1].cords[1], c=c)
-            plt.annotate(str(self.route[idx+1]), (self.route[idx+1].cords[0], self.route[idx+1].cords[1]))
-            draw_line(point, self.route[idx+1], self.timetable, colour='red')
+            plt.scatter(self.get_path(timetable)[idx+1].cords[0], self.get_path(timetable)[idx+1].cords[1], c=c)
+            plt.annotate(str(self.get_path(timetable)[idx+1]), (self.get_path(timetable)[idx+1].cords[0], self.get_path(timetable)[idx+1].cords[1]))
+            draw_line(point, self.get_path(timetable)[idx+1], timetable, colour='red')
         plt.show()
 
 
@@ -256,20 +261,27 @@ class Courier:
 
 
 class DeliveryService(Particle):
+
     def __init__(self, nr_couriers, min_nr_orders, max_nr_orders, initial_set):
         super(DeliveryService, self).__init__()
+        self.timetable = TimeTable()
         self.nr_couriers = nr_couriers
         self.min_nr_orders = min_nr_orders
         self.max_nr_orders = max_nr_orders
         starting_position = self.generate_starting_position(initial_set)
         self.best_position: List[Optional] = starting_position
         self.position: List[Optional] = starting_position
-        self.velocity: List[Optional] = self.compute_velocity()
+        self.velocity: List[Optional] = []
         self.swarm_best_position = starting_position
         self.best_fitness = self.fitness()
 
-    # TODO: ustalenie startowej dystrybucji zamówień na kurierów
-    def generate_starting_position(self, order_list):
+    def generate_starting_position(self, order_list) -> List[Particle]:
+        """Generates prior particles as randomly generated permutation of objects (Orders) evenly distributed among
+        given number of Couriers
+        params:
+        """
+
+
         pass
 
     def move(self):

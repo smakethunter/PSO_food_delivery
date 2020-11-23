@@ -1,4 +1,4 @@
-from swarm import Particle
+from swarm import *
 from system import *
 from drawing_utils import draw_line
 
@@ -9,8 +9,6 @@ class Courier:
         self._order_list = order_list
         self.max_bag_weight = 18
         self._bag: List[Order] = []
-
-
     pass
 
     def get_path(self, timetable):
@@ -264,7 +262,6 @@ class DeliveryService(Particle):
 
     def __init__(self, nr_couriers, min_nr_orders, max_nr_orders, initial_set):
         super(DeliveryService, self).__init__()
-        self.timetable = TimeTable()
         self.nr_couriers = nr_couriers
         self.min_nr_orders = min_nr_orders
         self.max_nr_orders = max_nr_orders
@@ -280,8 +277,6 @@ class DeliveryService(Particle):
         given number of Couriers
         params:
         """
-
-
         pass
 
     def move(self):

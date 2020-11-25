@@ -16,7 +16,7 @@ class SwarmGeneratorTest(unittest.TestCase):
     def test_generating_swarm(self):
         swarm = DeliverySwarmGenerator(3,12,2,3)
         print([[[x.id for x in p] for p in particle] for particle in swarm.swarm])
-        swarm.timetable.draw_table()
+        swarm.time_table.draw_table()
 
 
 

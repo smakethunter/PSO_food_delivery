@@ -12,22 +12,23 @@ class DeliveryService(Particle):
         self.velocity: List[Optional] = []
         self.swarm_best_position = starting_position
         self.best_fitness = self.fitness()
+        self.time_table = starting_position.timetable
 
     # TODO: implementacja ruchu
     def move(self):
         pass
     #TODO: implementacja oblicznia predkosci
-    def compute_velocity(self, swarm_best: Particle):
+    def compute_velocity(self, swarm_best: Particle, params : Dict[str:float]):
         pass
 
     def fitness(self):
         fitness = 0
         for row in self.position:
             courier = Courier(row)
-            fitness += courier.fitness
+            fitness += courier.fitness(self.time_table)
         return fitness
 
-    def update_position(self) -> None:
+    def update_best_position(self) -> None:
         if self.fitness() < self.best_fitness:
             self.best_fitness = self.fitness()
             self.best_position = self.position
@@ -41,18 +42,15 @@ class DeliverySwarm(Swarm):
 
     def fitness(self) -> float:
         fitness = 0
-        for x in self.swarm:
-            fitness += x.fitness()
-            return fitness
+        return max([x.fitness() for x in self.swarm])
+
         pass
 
-    def update_position(self) -> None:
-        for particle in self.swarm:
-            particle.move()
-            particle.update_position()
-        if self.fitness() < self.best_fitness:
-            self.best_fitness = self.fitness()
-            self.best_position = self.swarm
+    def update_position(self, particle: Particle) -> None:
+        particle_fitness = particle.fitness()
+        if particle_fitness < self.best_fitness:
+            self.best_fitness = particle_fitness
+            self.best_position = particle
         pass
 
     def get_best_position(self) -> Particle:

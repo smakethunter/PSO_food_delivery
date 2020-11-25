@@ -19,11 +19,14 @@ class Particle:
         pass
 
     @abstractmethod
-    def compute_velocity(self, swarm_best):
+    def compute_velocity(self, swarm_best, params: Dict[str:float]):
         pass
 
     @abstractmethod
     def update_position(self) -> None:
+        pass
+    @abstractmethod
+    def update_best_position(self):
         pass
 
 
@@ -42,7 +45,7 @@ class Swarm:
         pass
 
     @abstractmethod
-    def update_position(self):
+    def update_position(self, particle):
         pass
 
     pass
@@ -53,6 +56,7 @@ class PSO:
         self._inertia = inertia
         self._cp = cp
         self._cg = cg
+
     
     @property
     def inertia(self):
@@ -78,7 +82,21 @@ class PSO:
     def cg(self, cg):
         self._cg = cg
 
-    #def fit(self, swarm: Swarm):
+    def fit(self, swarm: Swarm, num_epochs, history=False):
+        if history:
+            epoch_history = History()
+        for i in range(num_epochs):
+            for particle in swarm.swarm:
+                particle.compute_velocity(swarm.best_position, {'inertia': self.inertia, 'cp': self.cp, 'cg': self.cg})
+                particle.move()
+                particle.update_best_position()
+                swarm.update_position(particle)
+        return swarm.best_position
+
+
+
+
+
 
 
 

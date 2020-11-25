@@ -11,3 +11,5 @@ def draw_line(point, point_to, time_table, colour):
         xhalf = (x[0] if x[0] < x[1] else x[1]) + abs(x[1] - x[0]) / 2
         distance = time_table.get_path_time(point.id, point_to.id)
         plt.annotate(f'{distance:.2f}', (xhalf, f(xhalf, a, b)))
+class History:
+    pass

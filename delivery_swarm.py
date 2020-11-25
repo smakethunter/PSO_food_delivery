@@ -1,3 +1,5 @@
+from abc import ABC
+
 from PSO import *
 from generators import *
 
@@ -18,7 +20,7 @@ class DeliveryService(Particle):
     def move(self):
         pass
     #TODO: implementacja oblicznia predkosci
-    def compute_velocity(self, swarm_best: Particle, params : Dict[str:float]):
+    def compute_velocity(self, swarm_best: Particle, params):
         pass
 
     def fitness(self):

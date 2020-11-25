@@ -1,5 +1,4 @@
-from PSO import *
-from PSO import Particle
+
 from system import *
 from drawing_utils import draw_line
 
@@ -243,17 +242,17 @@ class Courier:
             self.bag = []
         return path, cost
 
-    def draw_route(self, timetable):
-        plt.figure()
+    def draw_route(self, timetable, ax, colour='red'):
         c = 'red' if isinstance(self.get_path(timetable)[0], Restaurant) else "blue"
-        plt.scatter(self.get_path(timetable)[0].cords[0], self.get_path(timetable)[0].cords[1], c=c)
-        plt.annotate(str(self.get_path(timetable)[0]), (self.get_path(timetable)[0].cords[0], self.get_path(timetable)[0].cords[1]))
+        ax.scatter(self.get_path(timetable)[0].cords[0], self.get_path(timetable)[0].cords[1], c=c)
+        ax.annotate(str(self.get_path(timetable)[0]), (self.get_path(timetable)[0].cords[0], self.get_path(timetable)[0].cords[1]))
         for idx, point in enumerate(self.get_path(timetable)[:-1]):
             c = 'red' if isinstance(point, Restaurant) else "blue"
-            plt.scatter(self.get_path(timetable)[idx+1].cords[0], self.get_path(timetable)[idx+1].cords[1], c=c)
-            plt.annotate(str(self.get_path(timetable)[idx+1]), (self.get_path(timetable)[idx+1].cords[0], self.get_path(timetable)[idx+1].cords[1]))
-            draw_line(point, self.get_path(timetable)[idx+1], timetable, colour='red')
-        plt.show()
+            ax.scatter(self.get_path(timetable)[idx+1].cords[0], self.get_path(timetable)[idx+1].cords[1], c=c)
+            ax.annotate(str(self.get_path(timetable)[idx+1]), (self.get_path(timetable)[idx+1].cords[0], self.get_path(timetable)[idx+1].cords[1]))
+            draw_line(point, self.get_path(timetable)[idx+1], timetable, colour=colour,ax = ax)
+
+        return ax
 
 
 

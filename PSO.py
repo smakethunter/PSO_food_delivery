@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List,Optional
-from system import  *
+from system import *
+from drawing_utils import History
 from delivery_service import *
 
 
@@ -19,12 +20,9 @@ class Particle:
         pass
 
     @abstractmethod
-    def compute_velocity(self, swarm_best, params: Dict[str:float]):
+    def compute_velocity(self, swarm_best, params):
         pass
 
-    @abstractmethod
-    def update_position(self) -> None:
-        pass
     @abstractmethod
     def update_best_position(self):
         pass
@@ -82,15 +80,18 @@ class PSO:
     def cg(self, cg):
         self._cg = cg
 
-    def fit(self, swarm: Swarm, num_epochs, history=False):
-        if history:
-            epoch_history = History()
+    def fit(self, swarm: Swarm, num_epochs, history: History = None):
+
         for i in range(num_epochs):
             for particle in swarm.swarm:
-                particle.compute_velocity(swarm.best_position, {'inertia': self.inertia, 'cp': self.cp, 'cg': self.cg})
+                particle.compute_velocity(swarm.best_position,
+                                          {'inertia': self.inertia, 'cp': self.cp, 'cg': self.cg})
                 particle.move()
                 particle.update_best_position()
                 swarm.update_position(particle)
+            if history is not None:
+                history.add_particle(swarm.best_position)
+
         return swarm.best_position
 
 

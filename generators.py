@@ -9,7 +9,7 @@ class DeliveryServiceGenerator:
         self.timetable = table
         self.particle = particle
 
-    def generate_particle(self) -> Tuple[TimeTable, List[List[Order]]]:
+    def generate_particle(self):
         list_of_points = []
         restaurants = []
         for r in range(self.nr_restaurants):
@@ -33,8 +33,9 @@ class DeliveryServiceGenerator:
                 chosen_restaurant.add_order(order)
 
         particle_starting_point = self.redistribute(order_list)
+        timetable = TimeTable(list_of_points)
 
-        return TimeTable(list_of_points), particle_starting_point
+        return timetable, particle_starting_point
 
     def redistribute(self, order_list):
         np.random.shuffle(order_list)

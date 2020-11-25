@@ -1,4 +1,5 @@
-from swarm import *
+from PSO import *
+from PSO import Particle
 from system import *
 from drawing_utils import draw_line
 
@@ -258,43 +259,4 @@ class Courier:
 
 
 
-class DeliveryService(Particle):
-
-    def __init__(self, nr_couriers, min_nr_orders, max_nr_orders, initial_set):
-        super(DeliveryService, self).__init__()
-        self.nr_couriers = nr_couriers
-        self.min_nr_orders = min_nr_orders
-        self.max_nr_orders = max_nr_orders
-        starting_position = self.generate_starting_position(initial_set)
-        self.best_position: List[Optional] = starting_position
-        self.position: List[Optional] = starting_position
-        self.velocity: List[Optional] = []
-        self.swarm_best_position = starting_position
-        self.best_fitness = self.fitness()
-
-    def generate_starting_position(self, order_list) -> List[Particle]:
-        """Generates prior particles as randomly generated permutation of objects (Orders) evenly distributed among
-        given number of Couriers
-        params:
-        """
-        pass
-
-    def move(self):
-        pass
-
-    def compute_velocity(self, swarm_best: Particle):
-        pass
-
-    def fitness(self):
-        fitness = 0
-        for row in self.position:
-            courier = Courier(row)
-            fitness += courier.fitness
-        return fitness
-
-    def update_position(self) -> None:
-        if self.fitness() < self.best_fitness:
-            self.best_fitness = self.fitness()
-            self.best_position = self.position
-        pass
 

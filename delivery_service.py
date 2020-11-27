@@ -45,7 +45,7 @@ class Courier:
             for order in self.bag:
                 order.time_in_bag += time
 
-    def calculate_route(self,timetable) -> Tuple[List[Stop], float]:
+    def calculate_route(self, timetable) -> Tuple[List[Stop], float]:
         """
         Choosing path based on orders order :).
         :param timetable: table containing travel time between points
@@ -107,12 +107,7 @@ class Courier:
                         add order to the bag
                         add as much left orders as possible
                         update cost
-
-
-
-
         """
-
 
         path: List[Stop] = []
         cost: float = 0
@@ -224,7 +219,7 @@ class Courier:
             print(f'bag after action {[str(x) for x in self.bag]}')
             print([str(x) for x in path])
             print('<<<<<<<<<<step<<<<<<<<<<<')
-        print(('loop end'))
+        print('loop end')
         print([str(x) for x in self.bag])
 
         if len(self.bag) > 0:

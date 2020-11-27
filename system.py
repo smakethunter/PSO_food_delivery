@@ -50,6 +50,7 @@ class Restaurant(Stop):
     def add_order(self, order):
         self._order_list.append(order)
 
+
 class Client(Stop):
     id_iter = itertools.count()
 
@@ -88,8 +89,8 @@ class Order:
 
 
 class TimeTable:
-    def __init__(self, point_list = None):
-        self.table= TimeTable.create_time_table(point_list) if point_list is not None else []
+    def __init__(self, point_list=None):
+        self.table = TimeTable.create_time_table(point_list) if point_list is not None else []
         self.point_list = point_list if point_list is not None else []
 
     def get_path_time(self, source, destination):

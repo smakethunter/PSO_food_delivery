@@ -1,33 +1,5 @@
 import matplotlib.pyplot as plt
 from system import *
-from delivery_swarm import *
-from PSO import *
-class History:
-    def __init__(self):
-        self.history = []
-
-    def add_particle(self, particle):
-        self.history.append(particle)
-
-    def draw_summary(self):
-        plt.plot([x.fitness() for x in self.history])
-
-    def draw_path_search(self, timetable):
-        frames = []
-        fig, ax = plt.subplots()
-        for delivery_service in self.history:
-            for courier_path in delivery_service.position:
-                courier = Courier(courier_path)
-                courier.draw_route(timetable=timetable,ax=ax,colour='red')
-            fig.show()
-            frames.append(fig)
-        return frames
-
-
-
-
-
-    pass
 
 
 def draw_line(point, point_to, time_table, colour,ax):
@@ -41,3 +13,7 @@ def draw_line(point, point_to, time_table, colour,ax):
         xhalf = (x[0] if x[0] < x[1] else x[1]) + abs(x[1] - x[0]) / 2
         distance = time_table.get_path_time(point.id, point_to.id)
         ax.annotate(f'{distance:.2f}', (xhalf, f(xhalf, a, b)))
+
+
+def sigmoid(x: float, k = 1, l = 1):
+    return l/(1+np.exp(-k*x))

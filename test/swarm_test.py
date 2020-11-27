@@ -12,6 +12,7 @@ class ParticleGeneratorTest(unittest.TestCase):
         print([[x.id for x in f] for f in particle.shuffle_particle()])
         del particle
 
+
 class SwarmGeneratorTest(unittest.TestCase):
     def test_generating_swarm(self):
         swarm = DeliverySwarmGenerator(3,12,2,3)

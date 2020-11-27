@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.animation as animation
 from delivery_swarm import *
+
+
 if __name__ == '__main__':
    lista = [[1,2,3,4],[1,2,4], [2,2,4]]
    fig,ax = plt.subplots()

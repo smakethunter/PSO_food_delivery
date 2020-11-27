@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List,Optional
-from system import *
-from drawing_utils import History
 from delivery_service import *
+from system import *
 
 
 class Particle:
@@ -31,8 +30,8 @@ class Particle:
 class Swarm:
     def __init__(self, starting_position):
         self.swarm: List[Particle] = starting_position
-        self.best_position: Particle = self.get_best_position()
         self.best_fitness: float = self.fitness()
+        self.best_position: Particle = self.get_best_position()
 
     @abstractmethod
     def fitness(self):
@@ -47,6 +46,28 @@ class Swarm:
         pass
 
     pass
+
+
+class History:
+    def __init__(self):
+        self.history = []
+
+    def add_particle(self, particle):
+        self.history.append(particle)
+
+    def draw_summary(self):
+        plt.plot([x.fitness() for x in self.history])
+
+    def draw_path_search(self, timetable):
+        frames = []
+        fig, ax = plt.subplots()
+        for delivery_service in self.history:
+            for courier_path in delivery_service.position:
+                courier = Courier(courier_path)
+                courier.draw_route(timetable=timetable, ax=ax, colour='red')
+            fig.show()
+            frames.append(fig)
+        return frames
 
 
 class PSO:
@@ -93,7 +114,6 @@ class PSO:
                 history.add_particle(swarm.best_position)
 
         return swarm.best_position
-
 
 
 

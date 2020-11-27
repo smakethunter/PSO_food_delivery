@@ -1,5 +1,6 @@
 from system import *
 
+
 class DeliveryServiceGenerator:
     def __init__(self, nr_orders, nr_restaurants, nr_rows):
         self.nr_orders = nr_orders
@@ -32,9 +33,8 @@ class DeliveryServiceGenerator:
                 order_list.append(order)
                 chosen_restaurant.add_order(order)
 
-        particle_starting_point = self.redistribute(order_list)
+        particle_starting_point = self.redistribute(order_list) #coś tu się psuje?
         timetable = TimeTable(list_of_points)
-
         return timetable, particle_starting_point
 
     def redistribute(self, order_list):

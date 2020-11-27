@@ -14,8 +14,9 @@ class TestCourierMethods(unittest.TestCase):
         self.assertEqual(k1._order_list[0].id, 0)
 
 
-
 time_table = TimeTable()
+
+
 class TestPathAssignment(unittest.TestCase):
     def test_delivery_weight_not_exceeded_one_order_restaurant(self):
         r1 = Restaurant()
@@ -53,7 +54,6 @@ class TestPathAssignment(unittest.TestCase):
         del o1
         del o2
         del o3
-
 
     def test_delivery_weight_exceeded_one_order_restaurant(self):
             r1 = Restaurant()

@@ -3,6 +3,7 @@ from system import Order, TimeTable, Stop, Restaurant, Client
 from mock import Mock
 import numpy as np
 
+
 class TestId(unittest.TestCase):
     def test_id_assignment(self):
         client = Client()
@@ -24,17 +25,14 @@ class TestOrderMethods(unittest.TestCase):
 class TestTimeTable(unittest.TestCase):
     def test_table_creation(self):
 
-
         r1 = Restaurant([1,2])
         r2 = Restaurant([1,2])
         c1 = Client()
         c2 = Client()
 
-
         table = TimeTable([r1,r2,c1,c2])
         print(table.table)
         table.draw_table()
-
 
 
 if __name__ == '__main__':

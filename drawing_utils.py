@@ -5,8 +5,19 @@ from PSO import *
 class History:
     def __init__(self):
         self.history = []
+        self._swarm_loss_history = []
+    @property
+    def swarm_loss_history(self):
+        return self._swarm_loss_history
 
-    def add_particle(self, particle):
+    @swarm_loss_history.setter
+    def swarm_loss_history(self, loss_history):
+        self._swarm_loss_history = loss_history
+
+    def add_epoch_fitness_state(self, particles_loss):
+        self.swarm_loss_history.append(particles_loss)
+
+    def add_best_particle(self, particle):
         self.history.append(particle)
 
     def draw_summary(self):
@@ -16,13 +27,20 @@ class History:
         frames = []
         fig, ax = plt.subplots()
         for delivery_service in self.history:
+            i=0
             for courier_path in delivery_service.position:
                 courier = Courier(courier_path)
-                courier.draw_route(timetable=timetable,ax=ax,colour='red')
+                courier.draw_route(timetable=timetable,ax=ax,colour='red',index=i)
+                i+=1
             fig.show()
             frames.append(fig)
         return frames
 
+    def draw_particles_history(self):
+        particles_history = np.array(self.swarm_loss_history)
+        fig, ax = plt.subplots()
+        ax.plot(particles_history)
+        fig.show()
 
 
 

@@ -83,14 +83,19 @@ class PSO:
     def fit(self, swarm: Swarm, num_epochs, history: History = None):
 
         for i in range(num_epochs):
+            particles_fitness=[]
             for particle in swarm.swarm:
                 particle.compute_velocity(swarm.best_position,
                                           {'inertia': self.inertia, 'cp': self.cp, 'cg': self.cg})
                 particle.move()
                 particle.update_best_position()
                 swarm.update_position(particle)
+                particles_fitness.append(particle.fitness())
             if history is not None:
-                history.add_particle(swarm.best_position)
+                history.add_epoch_fitness_state(particles_fitness)
+            if history is not None:
+                history.add_best_particle(swarm.best_position)
+
 
         return swarm.best_position
 

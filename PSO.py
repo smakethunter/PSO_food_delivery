@@ -28,8 +28,8 @@ class Particle:
 
 
 class Swarm:
-    def __init__(self, starting_position):
-        self.swarm: List[Particle] = starting_position
+    def __init__(self, starting_position_swarm):
+        self.swarm: List[Particle] = starting_position_swarm
         self.best_fitness: float = self.fitness()
         self.best_position: Particle = self.get_best_position()
 

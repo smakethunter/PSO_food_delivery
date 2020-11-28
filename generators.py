@@ -1,4 +1,5 @@
 from system import *
+from delivery_service import Courier
 
 
 class DeliveryServiceGenerator:
@@ -6,9 +7,9 @@ class DeliveryServiceGenerator:
         self.nr_orders = nr_orders
         self.nr_restaurants = nr_restaurants
         self.nr_rows = nr_rows
-        table, particle = self.generate_particle()
+        table, particle_starting_point = self.generate_particle()
         self.timetable = table
-        self.particle = particle
+        self.particle = particle_starting_point
 
     def generate_particle(self):
         list_of_points = []
@@ -33,7 +34,7 @@ class DeliveryServiceGenerator:
                 order_list.append(order)
                 chosen_restaurant.add_order(order)
 
-        particle_starting_point = self.redistribute(order_list) #coś tu się psuje?
+        particle_starting_point = self.redistribute(order_list)
         timetable = TimeTable(list_of_points)
         return timetable, particle_starting_point
 
@@ -65,6 +66,6 @@ class DeliverySwarmGenerator:
         first_particle = DeliveryServiceGenerator(nr_orders, nr_restaurants, nr_rows)
         swarm = [first_particle.particle]
         for i in range(1, nr_particles):
-            swarm.append(first_particle.shuffle_particle())
+            swarm.append(Courier(first_particle.shuffle_particle()))
         return first_particle.timetable, swarm
 

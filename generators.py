@@ -35,6 +35,7 @@ class DeliveryServiceGenerator:
 
         particle_starting_point = self.redistribute(order_list)
         timetable = TimeTable(list_of_points)
+
         return timetable, particle_starting_point
 
     def redistribute(self, order_list):

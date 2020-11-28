@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 from system import *
-from delivery_swarm import *
-from PSO import *
+from delivery_service import Courier
 class History:
     def __init__(self):
         self.history = []

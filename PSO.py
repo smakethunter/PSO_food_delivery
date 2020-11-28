@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import List,Optional
-from system import *
-from drawing_utils import History
-from delivery_service import *
+from typing import *
+from drawing_utils import History, draw_line
 
 
 class Particle:
@@ -95,7 +93,6 @@ class PSO:
                 history.add_epoch_fitness_state(particles_fitness)
             if history is not None:
                 history.add_best_particle(swarm.best_position)
-
 
         return swarm.best_position
 

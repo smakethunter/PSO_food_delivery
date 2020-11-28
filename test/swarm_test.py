@@ -1,6 +1,6 @@
 import unittest
 from generators import *
-
+from delivery_swarm import *
 
 class ParticleGeneratorTest(unittest.TestCase):
     def test_generating_particle(self):
@@ -15,7 +15,7 @@ class ParticleGeneratorTest(unittest.TestCase):
 class SwarmGeneratorTest(unittest.TestCase):
     def test_generating_swarm(self):
         swarm = DeliverySwarmGenerator(3,12,2,3)
-        print([[[x.id for x in p] for p in particle] for particle in swarm.swarm])
+        print([p for p in swarm.swarm])
         swarm.time_table.draw_table()
 
 

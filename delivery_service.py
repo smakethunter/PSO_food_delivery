@@ -1,7 +1,5 @@
 
 from system import *
-from drawing_utils import draw_line
-
 
 class Courier:
 
@@ -45,7 +43,7 @@ class Courier:
             for order in self.bag:
                 order.time_in_bag += time
 
-    def calculate_route(self,timetable) -> Tuple[List[Stop], float]:
+    def calculate_route(self,timetable):
         """
         Choosing path based on orders order :).
         :param timetable: table containing travel time between points

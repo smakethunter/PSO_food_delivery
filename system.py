@@ -4,7 +4,7 @@ import itertools
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-from drawing_utils import draw_line
+
 
 
 class Stop:

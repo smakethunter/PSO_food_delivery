@@ -73,7 +73,7 @@ class DeliveryService(Particle):
         self.best_position: List[Optional] = starting_position.particle
         self.position: List[Optional] = starting_position.particle
         self.velocity: List[Optional] = []
-        self.swarm_best_position = starting_position
+        self.swarm_best_position = starting_position.particle
         self.time_table = starting_position.timetable
         self.best_fitness = self.fitness()
         self.nr_orders = nr_orders
@@ -82,33 +82,46 @@ class DeliveryService(Particle):
     def move(self):
         pass
 
-    # TODO: implementacja oblicznia predkosci
     def compute_velocity(self, swarm_best: Particle, params) -> [List, np.array]:
-        w, c_p, c_g = [PSO.inertia, PSO.cp, PSO.cg]
+        w, c_p, c_g = params.inertia, params.cp, params.cg
         best_position = np.array(self.best_position).flatten()
         position = np.array(self.position).flatten()
+        swarm_best_position = np.array(self.swarm_best_position).flatten()
         position_ids = np.array([x.id for x in position])
-        best_position_ids = np.array([x.id for x in best_position])
 
         p_d = []
         for best_pos, pos in zip(best_position, position):
-            p_d.append(np.where(position_ids == best_pos.id)[0][0] - np.where(position_ids == pos.id)[0][0])
+            p_d.append(np.abs(np.where(position_ids == best_pos.id)[0][0] - np.where(position_ids == pos.id)[0][0]))
 
         mean_pd = np.mean(p_d)
         p_d = sigmoid(np.abs(p_d - mean_pd))
-        p_g = [self.swarm_best_position.particle[i] - position[i] for
-               i, position in
-               zip(range(len(self.position)), self.position)]
+
+        p_g = []
+        for swarm_best_pos, pos in zip(swarm_best_position, position):
+            p_g.append(np.abs(np.where(position_ids == swarm_best_pos.id)[0][0] - np.where(position_ids == pos.id)[0][0]))
+
         mean_pg = np.mean(p_g)
         p_g = sigmoid(np.abs(p_g - mean_pg))
-        v_lk = w*self.velocity[0]+c_p*p_d+c_g*p_g
+
+        v_lk = c_p*p_d+c_g*p_g
+        if self.velocity:
+            v_lk += w*self.velocity[0]
         v_lk = softmax(v_lk)
         p = np.random.uniform(size=len(v_lk))
         v_lk = [0 if v_lk[i] < p[i] else 1 for i in range(len(v_lk))]
 
-        p_d2 = [len(self.velocity[1][i]) - len(self.best_position[i]) for i in range(len(self.velocity[1]))]
-        p_g2 = [len(self.velocity[1][i]) - len(self.swarm_best_position.particle[i]) for i in range(len(self.velocity[1]))]
-        v_d = w*self.velocity[1]+c_p*p_d2+c_g*p_g2
+        if self.velocity:
+            p_d2 = [len(vel[1]) - len(best_pos) for vel, best_pos in zip(self.velocity[1], self.best_position)]
+            p_g2 = [len(vel[1]) - len(swarm_best_pos) for vel, swarm_best_pos in zip(self.velocity[1], self.swarm_best_position)]
+            p_d2 = np.array(p_d2)
+            p_g2 = np.array(p_g2)
+            v_d = w * self.velocity[1] + c_p * p_d2 + c_g * p_g2
+        else:
+            p_d2 = [-len(best_pos) for best_pos in self.best_position]
+            p_g2 = [-len(swarm_best_pos) for swarm_best_pos in self.swarm_best_position]
+            p_d2 = np.array(p_d2)
+            p_g2 = np.array(p_g2)
+            v_d = c_p * p_d2 + c_g * p_g2
 
         return [v_lk, v_d]
 

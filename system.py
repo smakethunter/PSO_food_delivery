@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
 
-
 class Stop:
     id_iter = itertools.count()
 
@@ -50,6 +49,7 @@ class Restaurant(Stop):
     def add_order(self, order):
         self._order_list.append(order)
 
+
 class Client(Stop):
     id_iter = itertools.count()
 
@@ -88,12 +88,13 @@ class Order:
 
 
 class TimeTable:
-    def __init__(self, point_list = None):
-        self.table= TimeTable.create_time_table(point_list) if point_list is not None else []
+    def __init__(self, point_list=None):
+        self.table = TimeTable.create_time_table(point_list) if point_list is not None else []
         self.point_list = point_list if point_list is not None else []
 
     def get_path_time(self, source, destination):
-        return self.table[source][destination]
+        #return np.array(self.table)[source][destination]
+        return np.array(self.table)[np.where(self.table == source)][np.where(self.table == destination)]
 
     @staticmethod
     def get_time(source, destination):

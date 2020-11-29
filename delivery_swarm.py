@@ -83,7 +83,7 @@ class DeliveryService(Particle):
         pass
 
     def compute_velocity(self, swarm_best: Particle, params) -> [List, np.array]:
-        w, c_p, c_g = params.inertia, params.cp, params.cg
+        w, c_p, c_g = params['inertia'], params['cp'], params['cg']
         best_position = np.array(self.best_position).flatten()
         position = np.array(self.position).flatten()
         swarm_best_position = np.array(self.swarm_best_position).flatten()

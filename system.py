@@ -10,10 +10,12 @@ from scipy.optimize import curve_fit
 class Stop:
     id_iter = itertools.count()
 
-    def __init__(self):
-        self._id = next(Stop.id_iter)
-        self.cords = np.array([np.random.uniform(40., 50.), np.random.uniform(13., 15.)])
-
+    def __init__(self, cords: List[float] = None, id = None):
+        self._id = next(Stop.id_iter) if id is None else id
+        if cords is None:
+            self.cords = np.array([np.random.uniform(40., 50.), np.random.uniform(13., 15.)])
+        else:
+            self.cords = np.array(cords)
     @property
     def id(self):
         return self._id
@@ -26,13 +28,18 @@ class Stop:
 class Restaurant(Stop):
     id_iter = itertools.count()
 
-    def __init__(self, *args, **kwargs):
-        super().__init__()
+    def __init__(self,  id=None, restaurant_id = None, cords:List[float] = None,  *args, **kwargs):
+        super().__init__(cords=cords, id=id)
         self._order_list = []
-        self.restaurant_id = next(Restaurant.id_iter)
+        self.restaurant_id = next(Restaurant.id_iter) if restaurant_id is None else restaurant_id
+
 
     def __str__(self):
-        return f'Restaurant {self.restaurant_id}'
+        return '{'+ f'id: {self.id}, restaurant_id: {self.restaurant_id}, order_list: {[x.id for x in self.order_list]},' \
+               f'cords: {list(self.cords)}'+'}'
+    def dict(self):
+        return {'id': str(self.id), 'restaurant_id': str(self.restaurant_id), 'order_list': str([x.id for x in self.order_list]),
+                'cords': str(list(self.cords))}
 
     def orders_weight(self):
         return sum([x.weight for x in self.order_list])
@@ -53,29 +60,32 @@ class Restaurant(Stop):
 class Client(Stop):
     id_iter = itertools.count()
 
-    def __init__(self, *args, **kwargs):
-        super(Client, self).__init__()
-        self.client_id = next(Client.id_iter)
+    def __init__(self, id=None, client_id = None, cords:List[float] = None,*args, **kwargs):
+        super(Client, self).__init__(cords=cords,id=id)
+        self.client_id = next(Client.id_iter) if client_id is None else client_id
 
     def __str__(self):
-        return f'Client {self.client_id}'
-
+        return '{'+f'id: {self.id}, client_id: {self.client_id}, cords: {list(self.cords)}'+'}'
+    def dict(self):
+        return {'id': str(self.id), 'client_id': str(self.client_id), 'cords': str(list(self.cords))}
     pass
 
 
 class Order:
     id_iter = itertools.count()
 
-    def __init__(self, restaurant, client, weight):
+    def __init__(self, restaurant, client, weight, _id = None):
         self.source = restaurant
         self.destination = client
         self.weight = weight
-        self.id = next(Order.id_iter)
+        self.id = next(Order.id_iter) if _id is None else _id
         self._time_in_bag = 0
 
     def __str__(self):
-        return f'Order {self.id}'
-
+        return '{'+f'id: {self.id}, source: {self.source.id}, destination: {self.destination.id}' \
+               f' weight: {self.weight}'+'}'
+    def dict(self):
+        return {'id': str(self.id), 'source': str(self.source.id), 'destination': str(self.destination.id),'weight': str(self.weight)}
     @property
     def time_in_bag(self):
         return self._time_in_bag
@@ -133,7 +143,8 @@ class TimeTable:
         for point in self.point_list:
             c = 'red' if isinstance(point, Restaurant) else "blue"
             plt.scatter(point.cords[0], point.cords[1], c=c)
-            plt.annotate(str(point), (point.cords[0], point.cords[1]))
+            plt.annotate(f'Restaurant {point.restaurant_id}' if isinstance(point, Restaurant) else f'Client {point.client_id}'
+                         , (point.cords[0], point.cords[1]))
             if draw_distances:
                 for point_to in self.point_list:
                     draw_line(point, point_to, self, 'red')

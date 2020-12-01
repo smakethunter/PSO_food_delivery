@@ -115,7 +115,7 @@ class Courier:
         path: List[Stop] = []
         cost: float = 0
         i=0
-        print('start')
+
         start_order: Order = self._order_list[0]
         self.bag.append(start_order)
         path.append(start_order.source)
@@ -126,9 +126,7 @@ class Courier:
                     self.bag.append(order_in_source)
         # 2.
         for order_from_list in self._order_list[1:]:
-            print(f'taking {str(order_from_list)}')
-            print(f' bag before action {[str(x) for x in self.bag]}')
-            print('-------------------')
+
 
             # 2a
             if order_from_list in self.bag:
@@ -139,8 +137,7 @@ class Courier:
                         self.update_delivery_time(step_length)
                         cost += step_length
                         self.bag.remove(order_in_bag)
-                        print('action 2a/1')
-                        print(cost)
+
 
                     else:
 
@@ -149,15 +146,14 @@ class Courier:
                         self.update_delivery_time(step_length)
                         cost += step_length
                         self.bag.remove(order_in_bag)
-                        print('action 2a/2')
-                        print(cost)
+
 
 
             # 2b
             else:
                 #1
                 if len(self.bag) > 0:
-                    print('bag is not none')
+
                     for order_in_bag in self.bag:
                         order_in_bag_step_length = timetable.get_path_time(path[-1].id, order_in_bag.destination.id)
                         order_in_list_step_length = timetable.get_path_time(path[-1].id, order_from_list.source.id)
@@ -166,16 +162,14 @@ class Courier:
                             cost += order_in_bag_step_length
                             self.update_delivery_time(order_in_bag_step_length)
                             self.bag.remove(order_in_bag)
-                            print('action 2b/1/1')
-                            print(cost)
+
                         else:
                             if self.bag_weight() + order_from_list.weight < self.max_bag_weight:
                                 path.append(order_from_list.source)
                                 self.update_delivery_time(order_in_list_step_length)
                                 cost += order_in_list_step_length
                                 self.bag.append(order_from_list)
-                                print('bag appended 2b/1/2')
-                                print(cost)
+
                                 for order_in_source in order_from_list.source.order_list:
                                     if order_in_source.id is not order_from_list.id:
                                         if self.bag_weight() + order_in_source.weight < self.max_bag_weight:
@@ -188,8 +182,7 @@ class Courier:
                                 cost += order_in_bag_step_length
                                 self.update_delivery_time(order_in_bag_step_length)
                                 self.bag.remove(order_in_bag)
-                                print('bag appended 2b/1/2b')
-                                print(cost)
+
 
                     if order_from_list not in self.bag:
                         order_in_list_step_length = timetable.get_path_time(path[-1].id, order_from_list.source.id)
@@ -197,8 +190,7 @@ class Courier:
                         self.update_delivery_time(order_in_list_step_length)
                         cost += order_in_list_step_length
                         self.bag.append(order_from_list)
-                        print('alternative')
-                        print(cost)
+
                         for order_in_source in order_from_list.source.order_list:
                             if order_in_source.id is not order_from_list.id:
                                 if self.bag_weight() + order_in_source.weight < self.max_bag_weight:
@@ -212,31 +204,25 @@ class Courier:
                     path.append(order_from_list.source)
                     cost += order_in_list_step_length
                     self.bag.append(order_from_list)
-                    print('bag appended 2b/2')
-                    print(cost)
+
                     for order_in_source in order_from_list.source.order_list:
                         if order_in_source.id is not order_from_list.id:
                             if self.bag_weight() + order_in_source.weight < self.max_bag_weight:
                                 self.bag.append(order_in_source)
 
-            print(f'bag after action {[str(x) for x in self.bag]}')
-            print([str(x) for x in path])
-            print('<<<<<<<<<<step<<<<<<<<<<<')
-        print(('loop end'))
-        print([str(x) for x in self.bag])
+
 
         if len(self.bag) > 0:
-            print('zerowanie')
-            print([str(x) for x in self.bag])
+
+
             for order_in_bag in self.bag:
                 order_in_bag_step_length = timetable.get_path_time(path[-1].id, order_in_bag.destination.id)
                 path.append(order_in_bag.destination)
                 cost += order_in_bag_step_length
                 self.update_delivery_time(order_in_bag_step_length)
-                print(cost)
-                print([str(x) for x in self.bag])
+
                 #self.bag.remove(order_in_bag)
-                print([str(x) for x in path])
+
             self.bag = []
         return path, cost
 

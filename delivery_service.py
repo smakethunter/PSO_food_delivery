@@ -43,70 +43,11 @@ class Courier:
             for order in self.bag:
                 order.time_in_bag += time
 
-    def calculate_route(self,timetable):
+    def calculate_route(self, timetable):
         """
-        Choosing path based on orders order :).
+        Choosing path based on orders order.
         :param timetable: table containing travel time between points
         :return: Courier path, cost of the path
-        TODO:
-        Steps:
-        1.
-        Go to first order source
-            add first order to bag
-            add as much left orders as possible
-        2.
-        For each order in a list
-        2a.
-            if order in the bag:
-                For each order in the bag:
-                    if it's not current order from a list:
-                        go to it's destination
-                        add destination to the path
-                        update cost
-                        update time in bag for all orders in bag
-                        remove order from the bag
-                    else:
-                        go to it's destination
-                        add destination to the path
-                        update cost
-                        update time in bag for all orders in bag
-                        remove order from the bag
-                        break;
-            2b.
-            else:
-                For each order in the bag:
-                    if bag is not empty:
-                        if time to deliver this order is smaller than to pick up new:
-                            go to it's destination
-                            add destination to the path
-                            update cost
-                            update time in bag for all orders in bag
-                            remove order from the bag
-
-                        else:
-                            if weight of the order in the list and bag weight is permitted:
-                                go to order in bag destination
-                                add destination to the path
-                                update cost
-                                update time in bag for all orders in bag
-                                remove order from the bag
-                            else:
-                                go to order in bag source
-                                update time in bag for all orders in bag
-                                add source to the path
-                                add order to the bag
-                                update cost
-                                add as much left orders as possible
-                                break
-
-                    else:
-                        go to order in list source
-                        add source to the path
-                        add order to the bag
-                        add as much left orders as possible
-                        update cost
-
-
 
 
         """

@@ -14,6 +14,57 @@ def str_to_float_array(s):
     s = s.split(',')
     return [float(x) for x in s]
 
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-(x - np.median(x))))
+
+
+def change_with_parameter(comparsion, parameter):
+
+    to_change = list(np.where(comparsion != 0)[0])
+    nr_positions_to_change = int(np.round((1 - parameter) * len(to_change)))
+    positions_to_change=[]
+    for i in range(nr_positions_to_change):
+        pos = np.random.choice(to_change, 1)[0]
+        positions_to_change.append(pos)
+        to_change.remove(pos)
+
+    to_change = list(int(x) for x in positions_to_change)
+    for i in to_change:
+        comparsion[i] = 0
+
+
+    return comparsion
+
+
+def get_v(xp, pb, parameter):
+    difference = np.zeros(len(pb))
+    for i, x in enumerate(xp):
+        difference[i] = (i - np.where(pb == x)[0])
+    difference = sigmoid(abs(difference))
+
+    boolean = np.random.uniform(0, 1, len(xp))
+    comparsion = np.less_equal(boolean, difference).astype(int)
+
+    return change_with_parameter(comparsion, parameter)
+def get_distribution(difference,parameter):
+    difference = sigmoid(abs(difference))
+
+    boolean = np.random.uniform(0, 1, len(difference))
+    comparsion = np.less_equal(boolean, difference).astype(int)
+
+    return change_with_parameter(comparsion, parameter)
+
+def LK_swap(origin,target,bool_table):
+
+    target_to_swap = np.where(bool_table == 1)[0]
+    for t in target_to_swap:
+        for i, x in enumerate(origin):
+            if x.id == target[t].id:
+                origin[t], origin[i] = origin[i], origin[t]
+
+    return origin
+
 class DeliveryServiceGenerator:
     def __init__(self, nr_orders = None, nr_restaurants = None, nr_rows =None, from_file = False, filename = None):
         if from_file:
@@ -66,7 +117,7 @@ class DeliveryServiceGenerator:
                             order=Order(r,client,float(o['weight']),int(o['id']))
                             r.add_order(order)
                             order_list.append(order)
-                            print(order)
+
                 particle_starting_point = self.redistribute(order_list, shuffle=False)
         else:
 
@@ -90,7 +141,6 @@ class DeliveryServiceGenerator:
 
             particle_starting_point = self.redistribute(order_list)
         timetable = TimeTable(list_of_points)
-        print(timetable.draw_table())
         return timetable, particle_starting_point
 
     def redistribute(self, order_list, shuffle=True):
@@ -119,18 +169,83 @@ class DeliveryService(Particle):
         self.nr_couriers = nr_couriers if nr_couriers is not None else starting_position.nr_rows
         self.best_position: List[Optional] = starting_position.particle
         self.position: List[Optional] = starting_position.particle
-        self.velocity: List[Optional] = []
-        self.swarm_best_position = starting_position
         self.time_table = starting_position.timetable
         self.best_fitness = self.fitness()
         self.nr_orders = nr_orders if nr_orders is not None else starting_position.nr_orders
-
+        self.velocity = {'v_lk':np.zeros((self.nr_orders,3)),'v_d':np.zeros(self.nr_couriers)}
     # TODO: implementacja ruchu
-    def move(self):
+    def move(self, swarm_best):
+
+        origin = np.array([x for x in list(np.array(self.position).flatten())])
+        target_p= np.array([x for x in list(np.array(self.best_position).flatten())])
+        target_g = np.array([x for x in list(np.array(swarm_best.position).flatten())])
+        origin = LK_swap(origin,target_p,self.velocity['v_lk'][0])
+        origin = LK_swap(origin,target_g,self.velocity['v_lk'][1])
+        position_distribution = (np.array([len(x) for x in self.position]) + self.velocity['v_d']).astype(int)
+        position = []
+        for i, x in enumerate(position_distribution):
+            if i == 0:
+                position.append(list(origin[:x]))
+            else:
+                position.append(list(origin[position_distribution[i-1]:position_distribution[i-1]+x]))
+        self.position = position
+
+
+
         pass
+
     #TODO: implementacja oblicznia predkosci
-    def compute_velocity(self, swarm_best: Particle, params):
-        pass
+    def compute_velocity(self, swarm_best: Particle, params: Dict[str,float]):
+        inertia,cp,cg = params['inertia'], params['cp'], params['cg']
+        particle_position_ids = np.array([x.id for x in list(np.array(self.position).flatten())])
+        particle_best_position_ids = np.array([x.id for x in list(np.array(self.best_position).flatten())])
+        swarm_best_position_ids = np.array([x.id for x in list(np.array(swarm_best.position).flatten())])
+        ints_to_ones = lambda x: 0 if x<1 else 1
+        v_lk = np.vstack([ [ints_to_ones(x) for x in change_with_parameter(self.velocity['v_lk'][:,0],inertia)+
+              get_v(particle_position_ids,particle_best_position_ids,cp)],
+                          [ints_to_ones(x) for x in change_with_parameter(self.velocity['v_lk'][:, 0], inertia)+
+              get_v(particle_position_ids,swarm_best_position_ids,cg)]])
+
+        position_distribution = np.array([len(x) for x in self.position])
+        best_position_distribution = np.array([len(x) for x in self.best_position])
+        swarm_best_distribution = np.array([len(x) for x in swarm_best.position])
+        position_best_dist_difference=position_distribution-best_position_distribution
+        swarm_position_dist_difference = position_distribution-swarm_best_distribution
+        pb_change = get_distribution(position_best_dist_difference,cp)
+        pg_change = get_distribution(swarm_position_dist_difference,cg)
+
+        def diff_bool(x):
+            return np.array([-1 if i<0 else 1 for i in x])
+
+        v_dp = pb_change*diff_bool(position_best_dist_difference)
+
+        v_dg = pg_change*diff_bool(swarm_position_dist_difference)
+
+        v_d = change_with_parameter(self.velocity['v_d'],inertia)+v_dp+v_dg
+
+        v_d_plus = list(np.where(v_d>0)[0])
+
+        v_d_minus = list(np.where(v_d<0)[0])
+
+        difference_p = len(v_d_plus)-len(v_d_minus)
+
+        if difference_p < 0:
+            for i in range(abs(difference_p)):
+                remove_idx = np.random.choice(v_d_minus)
+                v_d[remove_idx] = 0
+                v_d_minus.remove(remove_idx)
+        if difference_p >0:
+            for i in range(abs(difference_p)):
+                remove_idx = np.random.choice(v_d_plus)
+                v_d[remove_idx] = 0
+                v_d_plus.remove(remove_idx)
+        self.velocity = {'v_lk':v_lk,'v_d': v_d}
+
+
+
+
+
+
 
     def fitness(self):
         fitness = 0
@@ -150,8 +265,9 @@ class DeliveryService(Particle):
 
         self.position = self.redistribute(order_list)
 
-    def redistribute(self, order_list):
-        np.random.shuffle(order_list)
+    def redistribute(self, order_list, shuffle = True):
+        if shuffle:
+            np.random.shuffle(order_list)
         orders_per_particle = self.nr_orders // self.nr_couriers
         particle_starting_point = []
         for x in range(self.nr_couriers):

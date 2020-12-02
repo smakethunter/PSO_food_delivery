@@ -10,7 +10,7 @@ class Particle:
         pass
 
     @abstractmethod
-    def move(self):
+    def move(self, swarm_best):
         pass
 
     @abstractmethod

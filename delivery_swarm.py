@@ -2,9 +2,8 @@ import json
 from abc import ABC
 
 from PSO import *
-from generators import *
-from delivery_service import Courier
-from system import *
+from delivery_service import *
+#from system import *
 from copy import deepcopy
 
 

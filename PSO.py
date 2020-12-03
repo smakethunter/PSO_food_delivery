@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import *
-from drawing_utils import History, draw_line
+from drawing_utils import *
 
 
 class Particle:
@@ -79,21 +79,25 @@ class PSO:
         self._cg = cg
 
     def fit(self, swarm: Swarm, num_epochs, history: History = None):
-
+        loss_history = []
         for i in range(num_epochs):
             particles_fitness=[]
             for particle in swarm.swarm:
                 particle.compute_velocity(swarm.best_position,
                                           {'inertia': self.inertia, 'cp': self.cp, 'cg': self.cg})
                 particle.move(swarm.best_position)
-
                 particle.update_best_position()
                 swarm.update_position(particle)
                 particles_fitness.append(particle.fitness())
             if history is not None:
-                history.add_epoch_fitness_state(particles_fitness)
-            if history is not None:
                 history.add_best_particle(swarm.best_position)
+
+            if history is not None:
+                history.add_epoch_fitness_state(particles_fitness)
+            loss_history.append(swarm.best_position.fitness())
+
+        if history is not None:
+            history.best_history = loss_history
 
         return swarm.best_position
 

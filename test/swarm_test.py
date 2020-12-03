@@ -1,5 +1,5 @@
 import unittest
-from generators import *
+
 from delivery_swarm import *
 
 class ParticleGeneratorTest(unittest.TestCase):

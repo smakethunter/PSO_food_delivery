@@ -2,9 +2,18 @@ import matplotlib.pyplot as plt
 from system import *
 from delivery_service import Courier
 class History:
-    def __init__(self):
+    def __init__(self,timetable):
         self.history = []
         self._swarm_loss_history = []
+        self.best_history = []
+        self.timetable = timetable
+    def draw_loss(self):
+        fig = plt.figure()
+        plt.plot(self.best_history)
+        plt.title('Zmiana wartości funkcji kosztu')
+        plt.xlabel('Iteracja')
+        plt.ylabel('Wartość funkcji kosztu')
+        fig.show()
     @property
     def swarm_loss_history(self):
         return self._swarm_loss_history
@@ -17,19 +26,25 @@ class History:
         self.swarm_loss_history.append(particles_loss)
 
     def add_best_particle(self, particle):
-        self.history.append(particle)
+        couriers = []
+        for courier_path in particle.position:
+            couriers.append(Courier(courier_path))
+            self.history.append(couriers)
 
     def draw_summary(self):
-        plt.plot([x.fitness() for x in self.history])
-
-    def draw_path_search(self, timetable):
+        figure = plt.figure()
+        plt.plot([sum([x.fitness(self.timetable) for x in courier]) for courier in self.history])
+        plt.xlabel('Iteracja')
+        plt.ylabel('Wartość funkcji kosztu')
+        plt.title('Zmiana wartości funkcji kosztu w liczbie iteracji')
+        figure.show()
+    def draw_path_search(self):
         frames = []
         fig, ax = plt.subplots()
         for delivery_service in self.history:
             i=0
-            for courier_path in delivery_service.position:
-                courier = Courier(courier_path)
-                courier.draw_route(timetable=timetable,ax=ax,colour='red',index=i)
+            for courier in delivery_service:
+                courier.draw_route(timetable=self.timetable,ax=ax,colour='red',index=i)
                 i+=1
             fig.show()
             frames.append(fig)
@@ -38,6 +53,9 @@ class History:
     def draw_particles_history(self):
         particles_history = np.array(self.swarm_loss_history)
         fig, ax = plt.subplots()
+        ax.set(title='Zmiana funkcji kosztu dla wszyskich osobników')
+        ax.set(xlabel='Iteracja')
+        ax.set(ylabel='Wartość funkcji kosztu')
         ax.plot(particles_history)
         fig.show()
 

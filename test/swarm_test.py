@@ -1,5 +1,5 @@
 import unittest
-from generators import *
+
 from delivery_swarm import *
 
 class ParticleGeneratorTest(unittest.TestCase):
@@ -28,8 +28,12 @@ class SwarmGeneratorTest(unittest.TestCase):
         swarm.time_table.draw_table()
     def test_swarm_from_file(self):
         swarm = DeliverySwarm(DeliverySwarmGenerator(nr_particles=4,from_file=True, filename='test_json.txt'))
-        print([p for p in swarm.swarm])
         swarm.time_table.draw_table()
+        for particle in swarm.swarm:
+            particle.compute_velocity(swarm.best_position, {'inertia': 0, 'cp':0.5,'cg':0.5})
+        for particle in swarm.swarm:
+            particle.move(swarm.best_position)
+            print(particle.velocity)
 
 
 

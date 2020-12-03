@@ -1,7 +1,8 @@
 import unittest
 
 from delivery_swarm import *
-
+import os
+wd = '/'.join(os.getcwd().split('/')[:-1])
 class ParticleGeneratorTest(unittest.TestCase):
     def test_generating_particle(self):
         particle = DeliveryServiceGenerator(12,8,3)
@@ -13,9 +14,9 @@ class ParticleGeneratorTest(unittest.TestCase):
 
         del particle
     def test_str(self):
-        particle = DeliveryService(3,12,4)
-        particle.save_to_file('test_json.txt')
-        with open('test_json.txt') as json_file:
+        particle = DeliveryService(nr_couriers=3, nr_orders=200, nr_restaurants=12)
+        particle.save_to_file(wd+'/cases/przypadek3k200z12r.txt')
+        with open(wd+'/cases/przypadek3k200z12r.txt') as json_file:
             data = json.load(json_file)
             print(data['Orders'])
     def test_from_flie(self):

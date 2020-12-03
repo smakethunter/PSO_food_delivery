@@ -5,7 +5,11 @@ from PSO import *
 from delivery_service import *
 #from system import *
 from copy import deepcopy
-
+def flatten(array):
+    new_array = []
+    for x in array:
+        new_array.extend(x)
+    return new_array
 
 def str_to_float_array(s):
     s = s.lstrip('[')
@@ -277,7 +281,7 @@ class DeliveryService(Particle):
         return particle_starting_point
 
     def save_to_file(self,filename=None):
-        orders = list(np.array(self.position).flatten())
+        orders = flatten(self.position)
         restaurants = set([order.source for order in orders])
         clients = set([order.destination for order in orders])
         output = {'nr_rows': self.nr_couriers, 'nr_orders': len(orders),'Orders': [o.dict() for o in orders],'Restaurants': [r.dict() for r in restaurants], 'Clients':[c.dict() for c in clients]}

@@ -85,7 +85,8 @@ class PSO:
             for particle in swarm.swarm:
                 particle.compute_velocity(swarm.best_position,
                                           {'inertia': self.inertia, 'cp': self.cp, 'cg': self.cg})
-                particle.move()
+                particle.move(swarm.best_position)
+
                 particle.update_best_position()
                 swarm.update_position(particle)
                 particles_fitness.append(particle.fitness())

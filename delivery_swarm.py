@@ -40,7 +40,8 @@ def change_with_parameter(comparsion, parameter):
 def get_v(xp, pb, parameter):
     difference = np.zeros(len(pb))
     for i, x in enumerate(xp):
-        difference[i] = (i - np.where(pb == x)[0])
+        difference[i] = (i - (np.where(pb == x)[0]))
+
     difference = sigmoid(abs(difference))
 
     boolean = np.random.uniform(0, 1, len(xp))
@@ -172,7 +173,7 @@ class DeliveryService(Particle):
         self.time_table = starting_position.timetable
         self.best_fitness = self.fitness()
         self.nr_orders = nr_orders if nr_orders is not None else starting_position.nr_orders
-        self.velocity = {'v_lk':np.zeros((self.nr_orders,3)),'v_d':np.zeros(self.nr_couriers)}
+        self.velocity = {'v_lk':np.zeros((2,self.nr_orders)),'v_d':np.zeros(self.nr_couriers)}
     # TODO: implementacja ruchu
     def move(self, swarm_best):
 
@@ -183,11 +184,10 @@ class DeliveryService(Particle):
         origin = LK_swap(origin,target_g,self.velocity['v_lk'][1])
         position_distribution = (np.array([len(x) for x in self.position]) + self.velocity['v_d']).astype(int)
         position = []
+        position_sum = 0
         for i, x in enumerate(position_distribution):
-            if i == 0:
-                position.append(list(origin[:x]))
-            else:
-                position.append(list(origin[position_distribution[i-1]:position_distribution[i-1]+x]))
+                position.append(list(origin[position_sum:position_sum+x]))
+                position_sum += x
         self.position = position
 
 
@@ -201,9 +201,9 @@ class DeliveryService(Particle):
         particle_best_position_ids = np.array([x.id for x in list(np.array(self.best_position).flatten())])
         swarm_best_position_ids = np.array([x.id for x in list(np.array(swarm_best.position).flatten())])
         ints_to_ones = lambda x: 0 if x<1 else 1
-        v_lk = np.vstack([ [ints_to_ones(x) for x in change_with_parameter(self.velocity['v_lk'][:,0],inertia)+
+        v_lk = np.vstack([ [ints_to_ones(x) for x in change_with_parameter(self.velocity['v_lk'][0,:],inertia)+
               get_v(particle_position_ids,particle_best_position_ids,cp)],
-                          [ints_to_ones(x) for x in change_with_parameter(self.velocity['v_lk'][:, 0], inertia)+
+                          [ints_to_ones(x) for x in change_with_parameter(self.velocity['v_lk'][1, :], inertia)+
               get_v(particle_position_ids,swarm_best_position_ids,cg)]])
 
         position_distribution = np.array([len(x) for x in self.position])

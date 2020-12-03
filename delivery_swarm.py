@@ -180,9 +180,9 @@ class DeliveryService(Particle):
     # TODO: implementacja ruchu
     def move(self, swarm_best):
 
-        origin = np.array([x for x in list(np.array(self.position).flatten())])
-        target_p= np.array([x for x in list(np.array(self.best_position).flatten())])
-        target_g = np.array([x for x in list(np.array(swarm_best.position).flatten())])
+        origin = np.array([x for x in flatten(self.position)])
+        target_p= np.array([x for x in flatten(self.best_position)])
+        target_g = np.array([x for x in flatten(swarm_best.position)])
         origin = LK_swap(origin,target_p,self.velocity['v_lk'][0])
         origin = LK_swap(origin,target_g,self.velocity['v_lk'][1])
         position_distribution = (np.array([len(x) for x in self.position]) + self.velocity['v_d']).astype(int)
@@ -200,9 +200,9 @@ class DeliveryService(Particle):
     #TODO: implementacja oblicznia predkosci
     def compute_velocity(self, swarm_best: Particle, params: Dict[str,float]):
         inertia,cp,cg = params['inertia'], params['cp'], params['cg']
-        particle_position_ids = np.array([x.id for x in list(np.array(self.position).flatten())])
-        particle_best_position_ids = np.array([x.id for x in list(np.array(self.best_position).flatten())])
-        swarm_best_position_ids = np.array([x.id for x in list(np.array(swarm_best.position).flatten())])
+        particle_position_ids = np.array([x.id for x in flatten(self.position)])
+        particle_best_position_ids = np.array([x.id for x in flatten(self.best_position)])
+        swarm_best_position_ids = np.array([x.id for x in flatten(swarm_best.position)])
         ints_to_ones = lambda x: 0 if x<1 else 1
         v_lk = np.vstack([ [ints_to_ones(x) for x in change_with_parameter(self.velocity['v_lk'][0,:],inertia)+
               get_v(particle_position_ids,particle_best_position_ids,cp)],
@@ -264,7 +264,7 @@ class DeliveryService(Particle):
         pass
 
     def shuffle_position(self):
-        order_list = list(np.array(self.position).flatten())
+        order_list = flatten(self.position)
 
         self.position = self.redistribute(order_list)
 

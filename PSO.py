@@ -127,8 +127,11 @@ class PSO:
         return swarm.best_position
 
     def to_file(self, filename=None):
+        nr_changes = 0
+        for _,v in self.history.epochs_with_change.items():
+            nr_changes+=v
         output = {'TimeScore' : self.history.time_performance, 'Loss' : self.history.swarm_loss_history[-1],
-                  'EpochsWithChange': self.history.epochs_with_change, 'PSO_Parameters':{'inertia': self.inertia,
+                  'EpochsWithChange': self.history.epochs_with_change,'NrChanges': nr_changes, 'PSO_Parameters':{'inertia': self.inertia,
                                                                                          'cp': self.cp, 'cg':self.cg,
                                                                                          'n_epochs':self.num_epochs},
                   'BestPath': [[order.id for order in courier.order_list] for courier in self.history.history[-1]]}

@@ -7,9 +7,9 @@ best_path_dir = main_path+'/best_path_plots/'
 class MyTestCase(unittest.TestCase):
     def test_something(self):
 
-        swarm = DeliverySwarm(DeliverySwarmGenerator(nr_particles=10, from_file=True, filename='test_json.txt'))
+        swarm = DeliverySwarm(DeliverySwarmGenerator(nr_particles=40, from_file=True, filename='test_json.txt'))
         history = History(swarm.time_table)
-        pso = PSO(0.1, 0.2, 0.2,20,history)
+        pso = PSO(0.1, 0.2, 0.2,40,history)
         print(pso.fit(swarm))
         history.draw_particles_history(main_path+'/swarm_loss_plots/'+'test.png')
         print(pso.history.time_performance)

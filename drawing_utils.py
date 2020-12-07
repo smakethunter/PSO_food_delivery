@@ -104,6 +104,9 @@ class History:
         for k,v in self.epochs_with_change.items():
             x.append(k)
             height.append(v)
+        plt.title('Liczba zmian najlepszego osobnika')
+        plt.ylabel('Liczba zmian')
+        plt.xlabel('Iteracja')
         plt.bar(x,height)
         plt.xticks([i+1 for i in range(len(self.epochs_with_change))])
         fig.show()

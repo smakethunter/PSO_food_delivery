@@ -177,6 +177,7 @@ class DeliveryService(Particle):
         self.best_fitness = self.fitness()
         self.nr_orders = nr_orders if nr_orders is not None else starting_position.nr_orders
         self.velocity = {'v_lk':np.zeros((2,self.nr_orders)),'v_d':np.zeros(self.nr_couriers)}
+
     # TODO: implementacja ruchu
     def move(self, swarm_best):
 
@@ -257,10 +258,13 @@ class DeliveryService(Particle):
             fitness += courier.fitness(self.time_table)
         return fitness
 
-    def update_best_position(self) -> None:
+    def update_best_position(self) -> bool:
         if self.fitness() < self.best_fitness:
             self.best_fitness = self.fitness()
             self.best_position = self.position
+            return True
+        else:
+            return False
         pass
 
     def shuffle_position(self):
@@ -320,11 +324,14 @@ class DeliverySwarm(Swarm):
 
         pass
 
-    def update_position(self, particle: Particle) -> None:
+    def update_position(self, particle: Particle) -> bool:
         particle_fitness = particle.fitness()
         if particle_fitness < self.best_fitness:
             self.best_fitness = particle_fitness
             self.best_position = particle
+            return True
+        else:
+            return False
         pass
 
     def get_best_position(self) -> Particle:

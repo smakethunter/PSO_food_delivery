@@ -35,8 +35,7 @@ class Restaurant(Stop):
 
 
     def __str__(self):
-        return '{'+ f'id: {self.id}, restaurant_id: {self.restaurant_id}, order_list: {[x.id for x in self.order_list]},' \
-               f'cords: {list(self.cords)}'+'}'
+        return f'Restaurant {self.restaurant_id}'
     def dict(self):
         return {'id': str(self.id), 'restaurant_id': str(self.restaurant_id), 'order_list': str([x.id for x in self.order_list]),
                 'cords': str(list(self.cords))}
@@ -65,7 +64,7 @@ class Client(Stop):
         self.client_id = next(Client.id_iter) if client_id is None else client_id
 
     def __str__(self):
-        return '{'+f'id: {self.id}, client_id: {self.client_id}, cords: {list(self.cords)}'+'}'
+        return f' Client: {self.client_id}'
     def dict(self):
         return {'id': str(self.id), 'client_id': str(self.client_id), 'cords': str(list(self.cords))}
     pass

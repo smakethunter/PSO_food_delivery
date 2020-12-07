@@ -1,19 +1,31 @@
 import matplotlib.pyplot as plt
 from system import *
 from delivery_service import Courier
+import json
 class History:
     def __init__(self,timetable):
         self.history = []
         self._swarm_loss_history = []
         self.best_history = []
         self.timetable = timetable
-    def draw_loss(self):
-        fig = plt.figure()
-        plt.plot(self.best_history)
-        plt.title('Zmiana wartości funkcji kosztu')
-        plt.xlabel('Iteracja')
-        plt.ylabel('Wartość funkcji kosztu')
-        fig.show()
+        self._epochs_with_change = []
+        self._time_performance = {}
+
+    @property
+    def time_performance(self):
+        return self._time_performance
+
+    @time_performance.setter
+    def time_performance(self, loss_history):
+        self._time_performance = loss_history
+    @property
+    def epochs_with_change(self):
+        return self._epochs_with_change
+
+    @epochs_with_change.setter
+    def epochs_with_change(self, loss_history):
+        self._epochs_with_change = loss_history
+        
     @property
     def swarm_loss_history(self):
         return self._swarm_loss_history
@@ -21,6 +33,7 @@ class History:
     @swarm_loss_history.setter
     def swarm_loss_history(self, loss_history):
         self._swarm_loss_history = loss_history
+
 
     def add_epoch_fitness_state(self, particles_loss):
         self.swarm_loss_history.append(particles_loss)
@@ -31,14 +44,14 @@ class History:
             couriers.append(Courier(courier_path))
             self.history.append(couriers)
 
-    def draw_summary(self):
-        figure = plt.figure()
-        plt.plot([sum([x.fitness(self.timetable) for x in courier]) for courier in self.history])
-        plt.xlabel('Iteracja')
-        plt.ylabel('Wartość funkcji kosztu')
-        plt.title('Zmiana wartości funkcji kosztu w liczbie iteracji')
-        figure.show()
-    def draw_path_search(self):
+    # def draw_summary(self):
+    #     figure = plt.figure()
+    #     plt.plot([sum([x.fitness(self.timetable) for x in courier]) for courier in self.history])
+    #     plt.xlabel('Iteracja')
+    #     plt.ylabel('Wartość funkcji kosztu')
+    #     plt.title('Zmiana wartości funkcji kosztu w liczbie iteracji')
+    #     figure.show()
+    def draw_path_search(self,filename = None):
         frames = []
         fig, ax = plt.subplots()
         for delivery_service in self.history:
@@ -48,9 +61,22 @@ class History:
                 i+=1
             fig.show()
             frames.append(fig)
+            if filename is not None:
+                fig.savefig(filename)
         return frames
+    def draw_best_path(self, filename = None):
+        fig, ax = plt.subplots()
+        i=0
+        for courier in self.history[-1]:
+            courier.draw_route(timetable=self.timetable, ax=ax, colour='red', index=i)
+            i += 1
+        fig.show()
+        if filename is not None:
+            fig.savefig(filename)
 
-    def draw_particles_history(self):
+
+
+    def draw_particles_history(self, filename = None):
         particles_history = np.array(self.swarm_loss_history)
         fig, ax = plt.subplots()
         ax.set(title='Zmiana funkcji kosztu dla wszyskich osobników')
@@ -58,6 +84,32 @@ class History:
         ax.set(ylabel='Wartość funkcji kosztu')
         ax.plot(particles_history)
         fig.show()
+        if filename is not None:
+            fig.savefig(filename)
+
+    def draw_loss(self, filename = None):
+        fig = plt.figure()
+        plt.plot(self.best_history)
+        plt.title('Zmiana wartości funkcji kosztu')
+        plt.xlabel('Iteracja')
+        plt.ylabel('Wartość funkcji kosztu')
+        fig.show()
+        if filename is not None:
+            fig.savefig(filename)
+
+    def draw_changes_per_epoch(self,filename = None):
+        fig = plt.figure()
+        height = []
+        x = []
+        for k,v in self.epochs_with_change.items():
+            x.append(k)
+            height.append(v)
+        plt.bar(x,height)
+        plt.xticks([i+1 for i in range(len(self.epochs_with_change))])
+        fig.show()
+        if filename is not None:
+            fig.savefig(filename)
+
 
 
 

@@ -177,7 +177,7 @@ class DeliveryService(Particle):
         self.best_fitness = self.fitness()
         self.nr_orders = nr_orders if nr_orders is not None else starting_position.nr_orders
         self.velocity = {'v_lk':np.zeros((2,self.nr_orders)),'v_d':np.zeros(self.nr_couriers)}
-
+        self.nr_restaurants = starting_position.nr_restaurants
     # TODO: implementacja ruchu
     def move(self, swarm_best):
 

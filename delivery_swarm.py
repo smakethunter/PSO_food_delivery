@@ -76,7 +76,7 @@ class DeliveryServiceGenerator:
                 data = json.load(json_file)
 
         self.nr_orders = nr_orders if nr_orders is not None else data['nr_orders']
-        self.nr_restaurants = nr_restaurants
+        self.nr_restaurants = nr_restaurants if nr_restaurants is not None else data['nr_restaurants']
         self.nr_rows = nr_rows if nr_orders is not None else data['nr_rows']
         table, particle = self.generate_particle(from_file, filename)
         self.timetable = table
@@ -284,11 +284,11 @@ class DeliveryService(Particle):
                 particle_starting_point.append(order_list[x * orders_per_particle:])
         return particle_starting_point
 
-    def save_to_file(self,filename=None):
+    def save_to_file(self, filename=None):
         orders = flatten(self.position)
         restaurants = set([order.source for order in orders])
         clients = set([order.destination for order in orders])
-        output = {'nr_rows': self.nr_couriers, 'nr_orders': len(orders),'Orders': [o.dict() for o in orders],'Restaurants': [r.dict() for r in restaurants], 'Clients':[c.dict() for c in clients]}
+        output = {'nr_rows': self.nr_couriers, 'nr_orders': len(orders),'nr_restaurants':len(restaurants),'Orders': [o.dict() for o in orders],'Restaurants': [r.dict() for r in restaurants], 'Clients':[c.dict() for c in clients]}
         with open(filename, 'w') as outfile:
             json.dump(output, outfile)
 

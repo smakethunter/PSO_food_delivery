@@ -15,8 +15,8 @@ class ParticleGeneratorTest(unittest.TestCase):
         del particle
     def test_str(self):
         particle = DeliveryService(nr_couriers=3, nr_orders=200, nr_restaurants=12)
-        particle.save_to_file(wd+'/cases/przypadek3k200z12r.txt')
-        with open(wd+'/cases/przypadek3k200z12r.txt') as json_file:
+        particle.save_to_file(wd+'/cases/przypadek20k500z12r.txt')
+        with open(wd+'/cases/przypadek20k500z12r.txt') as json_file:
             data = json.load(json_file)
             print(data['Orders'])
     def test_from_flie(self):

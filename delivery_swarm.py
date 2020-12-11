@@ -145,7 +145,7 @@ class DeliveryServiceGenerator:
 
             particle_starting_point = self.redistribute(order_list)
         timetable = TimeTable(list_of_points)
-        print(particle_starting_point)
+
         return timetable, particle_starting_point
 
     def redistribute(self, order_list, shuffle=True):
@@ -179,7 +179,7 @@ class DeliveryService(Particle):
         self.nr_orders = nr_orders if nr_orders is not None else starting_position.nr_orders
         self.velocity = {'v_lk':np.zeros((2,self.nr_orders)),'v_d':np.zeros(self.nr_couriers)}
         self.nr_restaurants = starting_position.nr_restaurants
-        print(self.position)
+
     # TODO: implementacja ruchu
     def move(self, swarm_best):
 

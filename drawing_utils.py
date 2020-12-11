@@ -67,7 +67,7 @@ class History:
     def draw_best_path(self, filename = None):
         fig, ax = plt.subplots()
         i=0
-        print(self.history)
+
         best_path = self.history[-1] if len(self.history)>0 else None
         if best_path is not None:
             for courier in best_path:

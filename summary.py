@@ -12,6 +12,7 @@ def run_pso_and_save_summary(filename,nr_particles, inertia,cp,cg, nr_epochs ):
     pso = PSO(inertia, cp, cg, nr_epochs , history)
     pso.fit(swarm)
     main_path = '/'.join(os.getcwd().split('/')[:-1])
+    print(main_path)
     name = filename.split('/')[-1]
     filename_png = name.split('.')[-2]+(f'{nr_particles}_{inertia}_{cp}_{cg}_{nr_epochs}').replace('.','')+'.png'
     filename_txt = name.split('.')[-2]+(f'{nr_particles}_{inertia}_{cp}_{cg}_{nr_epochs}').replace('.','')+'.txt'

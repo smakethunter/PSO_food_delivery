@@ -25,7 +25,7 @@ def run_pso_and_save_summary(filename,nr_particles, inertia,cp,cg, nr_epochs ):
     pso.to_file(main_path+'/experiments_documentation/' + filename_txt)
     pso.history.draw_changes_per_epoch(main_path+'/changes_per_epoch_plots/' + filename_png)
     row_to_csv = {}
-    row_to_csv['case_name'] = filename.split('.')[0]
+    row_to_csv['case_name'] = name
     nr_changes=0
     for _, v in pso.history.epochs_with_change.items():
         nr_changes += v
@@ -50,12 +50,13 @@ def run_pso_and_save_summary(filename,nr_particles, inertia,cp,cg, nr_epochs ):
     row_to_csv['experiment_documentation'] = 'experiments_documentation/' + filename
     fieldnames = [k for k,v in row_to_csv.items()]
 
-    with open('../summary.csv', 'a', newline='') as csvfile:
+    with open('summary.csv', 'a', newline='') as csvfile:
 
         writer = csv.DictWriter(csvfile, fieldnames = fieldnames )
 
         #writer.writeheader()
         writer.writerow(row_to_csv)
+
     del pso
     del swarm
     del history

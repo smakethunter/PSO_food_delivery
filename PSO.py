@@ -92,7 +92,9 @@ class PSO:
         for i in range(self.num_epochs):
             particles_fitness=[]
             epoch_start = time.time()
+            print(swarm.swarm)
             for particle in swarm.swarm:
+
                 velocity_start = time.time()
                 particle.compute_velocity(swarm.best_position,
                                           {'inertia': self.inertia, 'cp': self.cp, 'cg': self.cg})

@@ -5,22 +5,24 @@ from delivery_service import Courier
 import csv
 import os
 
-main_path = '/'.join(os.getcwd().split('/')[:-1])
+
 def run_pso_and_save_summary(filename,nr_particles, inertia,cp,cg, nr_epochs ):
     swarm:DeliverySwarm = DeliverySwarm(DeliverySwarmGenerator(nr_particles=nr_particles, from_file=True, filename=filename))
     history = History(swarm.time_table)
     pso = PSO(inertia, cp, cg, nr_epochs , history)
-    filename_png = filename.split('.')[-2]+f'{nr_particles}_{inertia}_{cp}_{cg}_{nr_epochs}'+'.png'
-    filename_txt = filename.split('.')[-2]+f'{nr_particles}_{inertia}_{cp}_{cg}_{nr_epochs}'+'.txt'
-    print(pso.fit(swarm))
-    history.draw_particles_history(main_path + '/swarm_loss_plots/' + filename_png)
-    print(pso.history.time_performance)
-    history.draw_loss(main_path + '/loss_history_plots/' + filename_png)
-    # history.draw_path_search()
-    print(pso.history.epochs_with_change)
+    pso.fit(swarm)
+    main_path = '/'.join(os.getcwd().split('/')[:-1])
+    name = filename.split('/')[-1]
+    filename_png = name.split('.')[-2]+(f'{nr_particles}_{inertia}_{cp}_{cg}_{nr_epochs}').replace('.','')+'.png'
+    filename_txt = name.split('.')[-2]+(f'{nr_particles}_{inertia}_{cp}_{cg}_{nr_epochs}').replace('.','')+'.txt'
+    print(filename_png)
+    print(filename_txt)
+    pso.history.draw_particles_history(main_path+'/swarm_loss_plots/' + filename_png)
+    pso.history.draw_loss(main_path+'/loss_history_plots/' + filename_png)
     pso.history.draw_best_path(main_path+'/best_path_plots/'+ filename_png)
-    pso.to_file(main_path + '/experiments_documentation/' + filename_txt)
-    pso.history.draw_changes_per_epoch(main_path + '/changes_per_epoch_plots/' + filename_png)
+
+    pso.to_file(main_path+'/experiments_documentation/' + filename_txt)
+    pso.history.draw_changes_per_epoch(main_path+'/changes_per_epoch_plots/' + filename_png)
     row_to_csv = {}
     row_to_csv['case_name'] = filename.split('.')[0]
     nr_changes=0

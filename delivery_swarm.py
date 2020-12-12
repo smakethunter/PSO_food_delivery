@@ -5,11 +5,14 @@ from PSO import *
 from delivery_service import *
 #from system import *
 from copy import deepcopy
+
+
 def flatten(array):
     new_array = []
     for x in array:
         new_array.extend(x)
     return new_array
+
 
 def str_to_float_array(s):
     s = s.lstrip('[')
@@ -36,7 +39,6 @@ def change_with_parameter(comparsion, parameter):
     for i in to_change:
         comparsion[i] = 0
 
-
     return comparsion
 
 
@@ -51,6 +53,8 @@ def get_v(xp, pb, parameter):
     comparsion = np.less_equal(boolean, difference).astype(int)
 
     return change_with_parameter(comparsion, parameter)
+
+
 def get_distribution(difference,parameter):
     difference = sigmoid(abs(difference))
 
@@ -58,6 +62,7 @@ def get_distribution(difference,parameter):
     comparsion = np.less_equal(boolean, difference).astype(int)
 
     return change_with_parameter(comparsion, parameter)
+
 
 def LK_swap(origin,target,bool_table):
 
@@ -69,10 +74,11 @@ def LK_swap(origin,target,bool_table):
 
     return origin
 
+
 class DeliveryServiceGenerator:
     def __init__(self, nr_orders = None, nr_restaurants = None, nr_rows =None, from_file = False, filename = None):
         if from_file:
-            with open(filename) as json_file:
+            with open('./cases/' + filename) as json_file:
                 data = json.load(json_file)
 
         self.nr_orders = nr_orders if nr_orders is not None else data['nr_orders']
@@ -95,7 +101,7 @@ class DeliveryServiceGenerator:
         restaurant_list = []
         order_list = []
         if from_file:
-            with open(filename) as json_file:
+            with open('./cases/' + filename) as json_file:
                 data = json.load(json_file)
                 restaurants = data['Restaurants']
                 orders = data['Orders']
@@ -178,9 +184,8 @@ class DeliveryService(Particle):
         self.nr_orders = nr_orders if nr_orders is not None else starting_position.nr_orders
         self.velocity = {'v_lk':np.zeros((2,self.nr_orders)),'v_d':np.zeros(self.nr_couriers)}
         self.nr_restaurants = starting_position.nr_restaurants
-    # TODO: implementacja ruchu
-    def move(self, swarm_best):
 
+    def move(self, swarm_best):
         origin = np.array([x for x in flatten(self.position)])
         target_p= np.array([x for x in flatten(self.best_position)])
         target_g = np.array([x for x in flatten(swarm_best.position)])
@@ -193,12 +198,8 @@ class DeliveryService(Particle):
                 position.append(list(origin[position_sum:position_sum+x]))
                 position_sum += x
         self.position = position
-
-
-
         pass
 
-    #TODO: implementacja oblicznia predkosci
     def compute_velocity(self, swarm_best: Particle, params: Dict[str,float]):
         inertia,cp,cg = params['inertia'], params['cp'], params['cg']
         particle_position_ids = np.array([x.id for x in flatten(self.position)])
@@ -244,12 +245,6 @@ class DeliveryService(Particle):
                 v_d[remove_idx] = 0
                 v_d_plus.remove(remove_idx)
         self.velocity = {'v_lk':v_lk,'v_d': v_d}
-
-
-
-
-
-
 
     def fitness(self):
         fitness = 0

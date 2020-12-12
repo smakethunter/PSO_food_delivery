@@ -97,8 +97,8 @@ class Order:
 
 
 class TimeTable:
-    def __init__(self, point_list = None):
-        self.table= TimeTable.create_time_table(point_list) if point_list is not None else []
+    def __init__(self, point_list=None):
+        self.table = TimeTable.create_time_table(point_list) if point_list is not None else []
         self.point_list = point_list if point_list is not None else []
 
     def get_path_time(self, source, destination):
@@ -134,7 +134,6 @@ class TimeTable:
         else:
             self.point_list.append(point)
             self.table.append([self.get_time(point.cords, point.cords)])
-        print(self.table)
         pass
 
     def draw_table(self, draw_distances=False):

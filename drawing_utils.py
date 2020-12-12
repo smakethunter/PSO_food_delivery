@@ -59,7 +59,7 @@ class History:
             for courier in delivery_service:
                 courier.draw_route(timetable=self.timetable,ax=ax,colour='red',index=i)
                 i+=1
-            fig.show()
+            #fig.show()
             frames.append(fig)
             if filename is not None:
                 fig.savefig(filename)
@@ -70,7 +70,7 @@ class History:
         for courier in self.history[-1]:
             courier.draw_route(timetable=self.timetable, ax=ax, colour='red', index=i)
             i += 1
-        fig.show()
+        #fig.show()
         if filename is not None:
             fig.savefig(filename)
 
@@ -83,7 +83,7 @@ class History:
         ax.set(xlabel='Iteracja')
         ax.set(ylabel='Wartość funkcji kosztu')
         ax.plot(particles_history)
-        fig.show()
+        #fig.show()
         if filename is not None:
             fig.savefig(filename)
 
@@ -93,7 +93,7 @@ class History:
         plt.title('Zmiana wartości funkcji kosztu')
         plt.xlabel('Iteracja')
         plt.ylabel('Wartość funkcji kosztu')
-        fig.show()
+        #fig.show()
         if filename is not None:
             fig.savefig(filename)
 
@@ -109,7 +109,7 @@ class History:
         plt.xlabel('Iteracja')
         plt.bar(x,height)
         plt.xticks([i+1 for i in range(len(self.epochs_with_change))])
-        fig.show()
+        #fig.show()
         if filename is not None:
             fig.savefig(filename)
 

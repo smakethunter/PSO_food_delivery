@@ -3,7 +3,6 @@ from system import *
 from delivery_service import Courier
 import json
 
-
 class History:
     def __init__(self,timetable):
         self.history = []
@@ -64,22 +63,19 @@ class History:
             frames.append(fig)
             if filename is not None:
                 fig.savefig(filename)
+                plt.close(fig)
         return frames
 
     def draw_best_path(self, filename = None):
         fig, ax = plt.subplots()
         i=0
         for courier in self.history[-1]:
-            path = []
-            print("path for courier " + str(i) + ": ")
-            for stop in courier.get_path(timetable=self.timetable):
-                path.append(str(stop))
-            print(path)
             courier.draw_route(timetable=self.timetable, ax=ax, colour='red', index=i)
             i += 1
         #fig.show()
         if filename is not None:
             fig.savefig(filename)
+            plt.close(fig)
 
     def draw_particles_history(self, filename = None):
         particles_history = np.array(self.swarm_loss_history)
@@ -91,6 +87,7 @@ class History:
         #fig.show()
         if filename is not None:
             fig.savefig(filename)
+            plt.close(fig)
 
     def draw_loss(self, filename = None):
         fig = plt.figure()
@@ -101,6 +98,7 @@ class History:
         #fig.show()
         if filename is not None:
             fig.savefig(filename)
+            plt.close(fig)
 
     def draw_changes_per_epoch(self,filename = None):
         fig = plt.figure()
@@ -117,11 +115,7 @@ class History:
         #fig.show()
         if filename is not None:
             fig.savefig(filename)
-
-
-
-
-
+            plt.close(fig)
     pass
 
 

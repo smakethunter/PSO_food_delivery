@@ -14,7 +14,7 @@ def run_pso_and_save_summary(filename,nr_particles, inertia,cp,cg, nr_epochs ):
     filename_txt = filename.split('.')[-2]+f'{nr_particles}_{inertia}_{cp}_{cg}_{nr_epochs}'+'.txt'
     pso.fit(swarm)
     history.draw_particles_history(main_path + 'swarm_loss_plots/' + filename_png)
-    print(pso.history.time_performance, '\n')
+    #print(pso.history.time_performance, '\n')
     history.draw_loss(main_path + 'loss_history_plots/' + filename_png)
     # history.draw_path_search()
     #print(pso.history.epochs_with_change)

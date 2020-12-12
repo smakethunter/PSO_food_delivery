@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 from system import *
 from delivery_service import Courier
 import json
+
+
 class History:
     def __init__(self,timetable):
         self.history = []
@@ -34,7 +36,6 @@ class History:
     def swarm_loss_history(self, loss_history):
         self._swarm_loss_history = loss_history
 
-
     def add_epoch_fitness_state(self, particles_loss):
         self.swarm_loss_history.append(particles_loss)
 
@@ -64,17 +65,21 @@ class History:
             if filename is not None:
                 fig.savefig(filename)
         return frames
+
     def draw_best_path(self, filename = None):
         fig, ax = plt.subplots()
         i=0
         for courier in self.history[-1]:
+            path = []
+            print("path for courier " + str(i) + ": ")
+            for stop in courier.get_path(timetable=self.timetable):
+                path.append(str(stop))
+            print(path)
             courier.draw_route(timetable=self.timetable, ax=ax, colour='red', index=i)
             i += 1
         #fig.show()
         if filename is not None:
             fig.savefig(filename)
-
-
 
     def draw_particles_history(self, filename = None):
         particles_history = np.array(self.swarm_loss_history)

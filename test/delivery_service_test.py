@@ -31,6 +31,7 @@ class TestPathAssignment(unittest.TestCase):
         r3.order_list.append(o3)
         r2.order_list.append(o2)
         for x in [r1, r2, r3, c1, c2, c3]:
+            print(x.id)
             time_table.add_element(x)
         courier = Courier([o1, o2, o3])
         cost = sum([time_table.get_path_time(r1.id, c1.id),

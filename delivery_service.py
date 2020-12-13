@@ -170,7 +170,8 @@ class Courier:
     def draw_route(self, timetable, ax, index, colour='red'):
         c = 'red' if isinstance(self.get_path(timetable)[0], Restaurant) else "blue"
         ax.scatter(self.get_path(timetable)[0].cords[0], self.get_path(timetable)[0].cords[1], c=c)
-        ax.annotate(str(self.get_path(timetable)[0].id), (self.get_path(timetable)[0].cords[0], self.get_path(timetable)[0].cords[1]))
+        ax.annotate("START", (self.get_path(timetable)[0].cords[0], self.get_path(timetable)[0].cords[1] + 0.1))
+        ax.annotate(str(self.get_path(timetable)[0]), (self.get_path(timetable)[0].cords[0], self.get_path(timetable)[0].cords[1]))
 
         for idx, point in enumerate(self.get_path(timetable)[:-1]):
             c = 'red' if isinstance(point, Restaurant) else "blue"

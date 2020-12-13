@@ -87,7 +87,10 @@ class DeliveryServiceGenerator:
         table, particle = self.generate_particle(from_file, filename)
         self.timetable = table
         self._particle = particle
-
+    def __del__(self):
+        del self.timetable
+        del self._particle
+        pass
     @property
     def particle(self):
         return self._particle
@@ -184,6 +187,7 @@ class DeliveryService(Particle):
         self.nr_orders = nr_orders if nr_orders is not None else starting_position.nr_orders
         self.velocity = {'v_lk':np.zeros((2,self.nr_orders)),'v_d':np.zeros(self.nr_couriers)}
         self.nr_restaurants = starting_position.nr_restaurants
+        del starting_position
 
     def move(self, swarm_best):
         origin = np.array([x for x in flatten(self.position)])
@@ -286,6 +290,9 @@ class DeliveryService(Particle):
         output = {'nr_rows': self.nr_couriers, 'nr_orders': len(orders),'nr_restaurants':len(restaurants),'Orders': [o.dict() for o in orders],'Restaurants': [r.dict() for r in restaurants], 'Clients':[c.dict() for c in clients]}
         with open(filename, 'w') as outfile:
             json.dump(output, outfile)
+        del orders
+        del restaurants
+        del clients
 
 
 
@@ -316,6 +323,9 @@ class DeliverySwarm(Swarm):
     def fitness(self) -> float:
         fitness = 0
         return max([x.fitness() for x in self.swarm])
+
+
+
 
         pass
 

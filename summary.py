@@ -6,7 +6,7 @@ import csv
 import os
 
 
-def run_pso_and_save_summary(filename,nr_particles, inertia,cp,cg, nr_epochs ):
+def run_pso_and_save_summary(filename,nr_particles, inertia,cp,cg, nr_epochs, draw_route = False ):
     swarm:DeliverySwarm = DeliverySwarm(DeliverySwarmGenerator(nr_particles=nr_particles, from_file=True, filename=filename))
     history = History(swarm.time_table)
     pso = PSO(inertia, cp, cg, nr_epochs , history)
@@ -20,10 +20,11 @@ def run_pso_and_save_summary(filename,nr_particles, inertia,cp,cg, nr_epochs ):
     print(filename_txt)
     pso.history.draw_particles_history(main_path+'/swarm_loss_plots/' + filename_png)
     pso.history.draw_loss(main_path+'/loss_history_plots/' + filename_png)
-    pso.history.draw_best_path(main_path+'/best_path_plots/'+ filename_png)
-
+    if draw_route:
+        pso.history.draw_best_path(main_path+'/best_path_plots/'+ filename_png)
+    pso.history.draw_changes_per_epoch(main_path + '/changes_per_epoch_plots/' + filename_png)
     pso.to_file(main_path+'/experiments_documentation/' + filename_txt)
-    pso.history.draw_changes_per_epoch(main_path+'/changes_per_epoch_plots/' + filename_png)
+
     row_to_csv = {}
     row_to_csv['case_name'] = name
     nr_changes=0

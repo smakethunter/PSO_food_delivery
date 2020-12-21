@@ -89,16 +89,20 @@ class PSO:
         compute_velocity_time=[]
         epoch_time = []
         update_position_time = []
+        avg_swarm_mobility =[]
+
         for i in range(self.num_epochs):
             particles_fitness=[]
             epoch_start = time.time()
-
+            avg_mobility_in_epoch = []
             for particle in swarm.swarm:
 
                 velocity_start = time.time()
                 particle.compute_velocity(swarm.best_position,
                                           {'inertia': self.inertia, 'cp': self.cp, 'cg': self.cg})
                 compute_velocity_time.append(-velocity_start+time.time())
+                avg_mobility_in_epoch.append(np.count_nonzero(particle.velocity['v_lk'])+np.count_nonzero(particle.velocity['v_d']))
+
                 move_start = time.time()
                 particle.move(swarm.best_position)
                 move_time.append(-move_start+time.time())
@@ -108,7 +112,11 @@ class PSO:
                 if swarm.update_position(particle):
                     epochs_with_change[i+1] +=1
                 particles_fitness.append(particle.fitness())
+
             epoch_time.append(-epoch_start+time.time())
+            avg_swarm_mobility.append(np.average(avg_mobility_in_epoch))
+
+
             if self.history is not None:
                 self.history.add_best_particle(swarm.best_position)
 
@@ -126,6 +134,7 @@ class PSO:
             self.history.best_history = loss_history
             self.history.epochs_with_change = epochs_with_change
             self.history.time_performance = execution_performance
+            self.history.mobility = avg_swarm_mobility
         return swarm.best_position
 
     def to_file(self, filename=None):

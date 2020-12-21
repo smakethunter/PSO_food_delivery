@@ -87,9 +87,7 @@ class DeliveryServiceGenerator:
         table, particle = self.generate_particle(from_file, filename)
         self.timetable = table
         self._particle = particle
-    def __del__(self):
-        del self.timetable
-        del self._particle
+
         pass
     @property
     def particle(self):

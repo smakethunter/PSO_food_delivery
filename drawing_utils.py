@@ -10,7 +10,15 @@ class History:
         self.timetable = timetable
         self._epochs_with_change = []
         self._time_performance = {}
+        self._mobility =[]
 
+    @property
+    def mobility(self):
+        return self._mobility
+
+    @mobility.setter
+    def mobility(self, loss_history):
+        self._mobility = loss_history
     @property
     def time_performance(self):
         return self._time_performance
@@ -86,7 +94,17 @@ class History:
         fig.show()
         if filename is not None:
             fig.savefig(filename)
-
+    def draw_avg_swarm_loss(self,filename = None):
+        particles_history = np.array(self.swarm_loss_history)
+        average = np.average(particles_history,axis=1)
+        fig, ax = plt.subplots()
+        ax.set(title='Średnia zmiana funkcji kosztu dla wszyskich osobników')
+        ax.set(xlabel='Iteracja')
+        ax.set(ylabel='Średnia wartość funkcji kosztu')
+        ax.plot(average)
+        fig.show()
+        if filename is not None:
+            fig.savefig(filename)
     def draw_loss(self, filename = None):
         fig = plt.figure()
         plt.plot(self.best_history)
@@ -112,7 +130,15 @@ class History:
         fig.show()
         if filename is not None:
             fig.savefig(filename)
-
+    def draw_mobility_per_epoch(self,filename):
+        fig = plt.figure()
+        plt.plot(self._mobility)
+        plt.title('Ruchliwosc roju')
+        plt.xlabel('Iteracja')
+        plt.ylabel('Ruchliwość')
+        fig.show()
+        if filename is not None:
+            fig.savefig(filename)
 
 
 

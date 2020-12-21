@@ -25,6 +25,10 @@ def run_pso_and_save_summary(filename,nr_particles, inertia,cp,cg, nr_epochs, dr
     pso.history.draw_changes_per_epoch(main_path + '/changes_per_epoch_plots/' + filename_png)
     pso.to_file(main_path+'/experiments_documentation/' + filename_txt)
 
+    pso.history.draw_mobility_per_epoch(main_path + '/mobility_plots/' + filename_png)
+
+    pso.history.draw_avg_swarm_loss(main_path + '/draw_avg_swarm_loss_plots/' + filename_png)
+
     row_to_csv = {}
     row_to_csv['case_name'] = name
     nr_changes=0

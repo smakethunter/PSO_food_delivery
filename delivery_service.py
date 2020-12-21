@@ -3,7 +3,7 @@ from system import *
 
 class Courier:
 
-    def __init__(self, order_list):
+    def __init__(self, order_list: List[Order]) -> None:
         self._order_list = order_list
         self.max_bag_weight = 18
         self._bag: List[Order] = []
@@ -35,17 +35,26 @@ class Courier:
     def bag(self, bag):
         self._bag = bag
 
-    def bag_weight(self):
+    def bag_weight(self) -> float:
+        """
+        Calculates the total weight of the bag
+        :return: total_weight
+        """
         return sum([x.weight for x in self.bag])
 
-    def update_delivery_time(self, time):
+    def update_delivery_time(self, time: float) -> None:
+        """
+
+        :param time: time to add
+        :return: None
+        """
         if self.bag:
             for order in self.bag:
                 order.time_in_bag += time
 
-    def calculate_route(self, timetable):
+    def calculate_route(self, timetable: TimeTable) -> Tuple[List[Stop], float]:
         """
-        Choosing path based on orders order.
+        Choosing path based on orders order using greedy programming tactics.
         :param timetable: table containing travel time between points
         :return: Courier path, cost of the path
 
@@ -167,7 +176,7 @@ class Courier:
             self.bag = []
         return path, cost
 
-    def draw_route(self, timetable, ax, index, colour='red'):
+    def draw_route(self, timetable: TimeTable, ax: plt.axes, index: int, colour: str = 'red') -> plt.axes:
         c = 'red' if isinstance(self.get_path(timetable)[0], Restaurant) else "blue"
         ax.scatter(self.get_path(timetable)[0].cords[0], self.get_path(timetable)[0].cords[1], c=c)
         ax.annotate("START", (self.get_path(timetable)[0].cords[0], self.get_path(timetable)[0].cords[1] + 0.1))

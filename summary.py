@@ -6,8 +6,10 @@ import csv
 import os
 
 
-def run_pso_and_save_summary(filename,nr_particles, inertia,cp,cg, nr_epochs, draw_route = False ):
-    swarm:DeliverySwarm = DeliverySwarm(DeliverySwarmGenerator(nr_particles=nr_particles, from_file=True, filename=filename))
+def run_pso_and_save_summary(filename: str, nr_particles: int, inertia: float, cp: float, cg: float, nr_epochs: int,
+                             draw_route: bool = False):
+    swarm:DeliverySwarm = DeliverySwarm(DeliverySwarmGenerator(nr_particles=nr_particles, from_file=True,
+                                                               filename=filename))
     history = History(swarm.time_table)
     pso = PSO(inertia, cp, cg, nr_epochs , history)
     pso.fit(swarm)

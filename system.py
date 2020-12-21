@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
 
-
 class Stop:
     id_iter = itertools.count()
 
@@ -102,10 +101,22 @@ class TimeTable:
         self.point_list = point_list if point_list is not None else []
 
     def get_path_time(self, source, destination):
+        """
+        return time in given position
+        :param source:x
+        :param destination:y
+        :return: time
+        """
         return self.table[source][destination]
 
     @staticmethod
-    def get_time(source, destination):
+    def get_time(source, destination) -> float:
+        """
+        Return time to travel between source and destination
+        :param source: source
+        :param destination: destination
+        :return: time to travel
+        """
         distance = np.linalg.norm((source - destination))
         velocity = 1.
         time = distance / velocity
@@ -113,6 +124,11 @@ class TimeTable:
 
     @staticmethod
     def create_time_table(points: List[Stop]):
+        """
+        Creates timetable to the given set of points
+        :param points: set of points
+        :return: table of times
+        """
         time_table = []
         for source in points:
             time_source_to_dest = []
@@ -125,6 +141,11 @@ class TimeTable:
         return time_table
 
     def add_element(self, point):
+        """
+        Adds element to the table
+        :param point: element to add
+
+        """
         if len(self.point_list) > 0:
             self.point_list.append(point)
             self.table.append([self.get_time(point.cords, dest.cords) for dest in self.point_list])

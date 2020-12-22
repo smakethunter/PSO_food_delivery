@@ -14,12 +14,9 @@ def run_pso_and_save_summary(filename: str, nr_particles: int, inertia: float, c
     pso = PSO(inertia, cp, cg, nr_epochs , history)
     pso.fit(swarm)
     main_path = '/'.join(os.getcwd().split('/'))
-    print(main_path)
     name = filename.split('/')[-1]
     filename_png = name.split('.')[-2]+(f'{nr_particles}_{inertia}_{cp}_{cg}_{nr_epochs}').replace('.','')+'.png'
     filename_txt = name.split('.')[-2]+(f'{nr_particles}_{inertia}_{cp}_{cg}_{nr_epochs}').replace('.','')+'.txt'
-    print(filename_png)
-    print(filename_txt)
     pso.history.draw_particles_history(main_path+'/swarm_loss_plots/' + filename_png)
     pso.history.draw_loss(main_path+'/loss_history_plots/' + filename_png)
     if draw_route:

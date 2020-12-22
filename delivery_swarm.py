@@ -7,7 +7,7 @@ from delivery_service import *
 from copy import deepcopy
 
 
-def flatten(array: List[Optional]) -> List[Optional]:
+def flatten(array):
     """
 
     :param array: N-dimensional array to flatten

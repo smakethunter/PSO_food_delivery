@@ -51,7 +51,7 @@ run_pso_and_save_summary(filename,20,0.1,0.2,0.3,30,draw_route=False,database=cs
 
 
     
-![png](output_6_0.png)
+https://github.com/smakethunter/PSO_food_delivery/blob/master/changes_per_epoch_plots/przypadek10k200z20r10_01_01_01_20.png
     
 
 

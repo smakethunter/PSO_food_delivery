@@ -57,25 +57,25 @@ run_pso_and_save_summary(filename,20,0.1,0.2,0.3,30,draw_route=False,database=cs
 
 
     
-![png](output_6_1.png)
+![png](https://github.com/smakethunter/PSO_food_delivery/blob/master/draw_avg_swarm_loss_plots/przypadek10k200z20r10_01_01_01_20.png)
     
 
 
 
     
-![png](output_6_2.png)
+![png](https://github.com/smakethunter/PSO_food_delivery/blob/master/loss_history_plots/przypadek10k200z20r10_01_01_01_20.png)
     
 
 
 
     
-![png](output_6_3.png)
+![png](https://github.com/smakethunter/PSO_food_delivery/blob/master/mobility_plots/przypadek10k200z20r10_01_01_01_20.png)
     
 
 
 
     
-![png](output_6_4.png)
+![png](https://github.com/smakethunter/PSO_food_delivery/blob/master/swarm_loss_plots/przypadek10k200z20r10_01_01_01_20.png)
     
 
 

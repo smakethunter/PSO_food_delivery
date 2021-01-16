@@ -1,5 +1,5 @@
 import unittest
-from delivery_service import *
+from pso.delivery_service import *
 
 
 class TestCourierMethods(unittest.TestCase):

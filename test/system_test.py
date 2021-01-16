@@ -1,7 +1,6 @@
 import unittest
-from system import Order, TimeTable, Stop, Restaurant, Client
-from mock import Mock
-import numpy as np
+from pso.system import Order, TimeTable, Restaurant, Client
+
 
 class TestId(unittest.TestCase):
     def test_id_assignment(self):

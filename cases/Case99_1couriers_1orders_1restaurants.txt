@@ -1,1 +1,0 @@
-{"nr_rows": 1, "nr_orders": 1, "nr_restaurants": 1, "Orders": [{"id": "0", "source": "0", "destination": "1", "weight": "3.0562804186921175"}], "Restaurants": [{"id": "0", "restaurant_id": "0", "order_list": "[0]", "cords": "[44.55633540744727, 14.781895781747814]"}], "Clients": [{"id": "1", "client_id": "0", "cords": "[46.05630563670082, 14.433295864560733]"}]}

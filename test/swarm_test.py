@@ -1,6 +1,6 @@
 import unittest
 
-from delivery_swarm import *
+from pso.delivery_swarm import *
 import os
 
 wd = '/'.join(os.getcwd().split('/')[:-1])

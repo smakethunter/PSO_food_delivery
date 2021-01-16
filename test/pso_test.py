@@ -1,7 +1,6 @@
 import unittest
-from PSO import PSO
-from delivery_swarm import *
-import os
+from pso.delivery_swarm import *
+
 #main_path = '../'.join(os.getcwd().split('/')[:-1])
 main_path = '..'
 best_path_dir = main_path+'/best_path_plots/'
